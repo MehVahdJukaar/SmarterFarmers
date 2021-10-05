@@ -1,10 +1,9 @@
 package net.mehvahdjukaar.smarterfarmers;
 
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.Fox;
-import net.minecraft.world.item.*;
-import net.minecraft.world.level.block.*;
-import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.block.Block;
+import net.minecraft.block.StemBlock;
+import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.item.*;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent;
@@ -33,16 +32,16 @@ public class SmarterFarmers {
 
     private void setup(final FMLCommonSetupEvent event) {
         try {
-            Map<Item, Integer> newMap = new HashMap<>(Villager.FOOD_POINTS);
+            Map<Item, Integer> newMap = new HashMap<>(VillagerEntity.FOOD_POINTS);
 
             for (Item i : ForgeRegistries.ITEMS) {
                 if (i.isEdible() && i.getRarity(new ItemStack(i)) == Rarity.COMMON
                         //ignore container items
-                        && !(i instanceof BowlFoodItem) && !(i instanceof HoneyBottleItem)) {
+                        && !(i instanceof SoupItem) && !(i instanceof HoneyBottleItem)) {
                     newMap.put(i, i.getFoodProperties().getNutrition());
                 }
             }
-            Villager.FOOD_POINTS = newMap;
+            VillagerEntity.FOOD_POINTS = newMap;
         } catch (Exception e) {
             LOGGER.warn("Failed to add custom foods to villagers");
         }

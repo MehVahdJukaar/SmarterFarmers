@@ -2,17 +2,16 @@ package net.mehvahdjukaar.smarterfarmers.mixins;
 
 
 import net.mehvahdjukaar.smarterfarmers.SmarterFarmers;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.npc.AbstractVillager;
-import net.minecraft.world.entity.npc.VillagerData;
-import net.minecraft.world.entity.npc.Villager;
-import net.minecraft.world.entity.npc.VillagerProfession;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
-import org.spongepowered.asm.mixin.Final;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
+import net.minecraft.entity.merchant.villager.VillagerData;
+import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.entity.merchant.villager.VillagerProfession;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -21,13 +20,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Map;
 
-@Mixin({Villager.class})
-public abstract class VillagerEntityMixin extends AbstractVillager {
+@Mixin({VillagerEntity.class})
+public abstract class VillagerEntityMixin extends AbstractVillagerEntity {
 
 
     @Shadow public static Map<Item, Integer> FOOD_POINTS;
 
-    public VillagerEntityMixin(EntityType<? extends AbstractVillager> p_i50185_1_, Level p_i50185_2_) {
+    public VillagerEntityMixin(EntityType<? extends AbstractVillagerEntity> p_i50185_1_, World p_i50185_2_) {
         super(p_i50185_1_, p_i50185_2_);
     }
 

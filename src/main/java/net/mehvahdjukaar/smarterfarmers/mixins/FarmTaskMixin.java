@@ -4,24 +4,24 @@ package net.mehvahdjukaar.smarterfarmers.mixins;
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.smarterfarmers.MySortedMap;
 import net.mehvahdjukaar.smarterfarmers.SmarterFarmers;
-import net.minecraft.world.entity.animal.Fox;
-import net.minecraft.world.level.block.*;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.ai.memory.MemoryModuleType;
-import net.minecraft.world.entity.ai.memory.WalkTarget;
-import net.minecraft.world.entity.ai.behavior.HarvestFarmland;
-import net.minecraft.world.entity.npc.Villager;
-import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.ai.behavior.BlockPosTracker;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.block.*;
+import net.minecraft.client.audio.SoundSource;
+import net.minecraft.entity.ai.brain.memory.MemoryModuleType;
+import net.minecraft.entity.ai.brain.memory.WalkTarget;
+import net.minecraft.entity.ai.brain.task.FarmTask;
+import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockPosWrapper;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.PlantType;
 import org.spongepowered.asm.mixin.Final;
@@ -32,9 +32,8 @@ import org.spongepowered.asm.mixin.Shadow;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Mixin({HarvestFarmland.class})
+@Mixin({FarmTask.class})
 public abstract class FarmTaskMixin {
-
 
     @Shadow
     private BlockPos aboveFarmlandPos;
@@ -47,13 +46,13 @@ public abstract class FarmTaskMixin {
     private int timeWorkedSoFar;
 
     @Shadow
-    protected abstract BlockPos getValidFarmland(ServerLevel p_212833_1_);
+    protected abstract BlockPos getValidFarmland(ServerWorld p_212833_1_);
 
 
     //TODO: find a better more general solution to max age problem (some mods dont extend cropblock..)
     private boolean canHarvest(BlockState state) {
         Block b = state.getBlock();
-        return ((b instanceof CropBlock && ((CropBlock) b).isMaxAge(state)) ||
+        return ((b instanceof CropsBlock && ((CropsBlock) b).isMaxAge(state)) ||
                 b instanceof SweetBerryBushBlock && state.getValue(SweetBerryBushBlock.AGE) == 2 ||
                 b instanceof IPlantable && state.hasProperty(BlockStateProperties.AGE_7)
                         && state.getValue(BlockStateProperties.AGE_7) == 7);
@@ -65,7 +64,7 @@ public abstract class FarmTaskMixin {
      * @author MehVahdJukaar
      */
     @Overwrite
-    protected void tick(ServerLevel world, Villager villager, long p_212833_3_) {
+    protected void tick(ServerWorld world, VillagerEntity villager, long p_212833_3_) {
         if (this.aboveFarmlandPos == null || this.aboveFarmlandPos.closerThan(villager.position(), 1.0D)) {
             if (this.aboveFarmlandPos != null && p_212833_3_ > this.nextOkStartTime) {
                 BlockState toHarvest = world.getBlockState(this.aboveFarmlandPos);
@@ -84,8 +83,8 @@ public abstract class FarmTaskMixin {
                 //}
 
                 //check if block is empty to replant
-                if (world.getBlockState(this.aboveFarmlandPos).isAir() && farmlandBlock instanceof FarmBlock) {
-                    SimpleContainer inventory = villager.getInventory();
+                if (world.getBlockState(this.aboveFarmlandPos).isAir() && farmlandBlock instanceof FarmlandBlock) {
+                    Inventory inventory = villager.getInventory();
 
 
                     ItemStack itemStack = ItemStack.EMPTY;
@@ -136,7 +135,8 @@ public abstract class FarmTaskMixin {
                             }
                         }
                         if(!canPlant) {
-                            Optional<Integer> opt = availableSeeds.values().stream().findFirst();
+                            //gets random
+                            Optional<Integer> opt = availableSeeds.values().stream().findAny();
                             if (opt.isPresent()) {
                                 ind = opt.get();
                                 canPlant = true;
@@ -150,7 +150,7 @@ public abstract class FarmTaskMixin {
                     if (canPlant) {
                         world.setBlock(aboveFarmlandPos, ((IPlantable) ((BlockItem) itemStack.getItem()).getBlock()).getPlant(world, aboveFarmlandPos), 3);
 
-                        world.playSound(null, this.aboveFarmlandPos.getX(), this.aboveFarmlandPos.getY(), this.aboveFarmlandPos.getZ(), SoundEvents.CROP_PLANTED, SoundSource.BLOCKS, 1.0F, 1.0F);
+                        world.playSound(null, this.aboveFarmlandPos.getX(), this.aboveFarmlandPos.getY(), this.aboveFarmlandPos.getZ(), SoundEvents.CROP_PLANTED, SoundCategory.BLOCKS, 1.0F, 1.0F);
                         itemStack.shrink(1);
                         if (itemStack.isEmpty()) {
                             inventory.setItem(ind, ItemStack.EMPTY);
@@ -159,13 +159,13 @@ public abstract class FarmTaskMixin {
 
                 }
 
-                if (block instanceof CropBlock && !((CropBlock) block).isMaxAge(toHarvest)) {
+                if (block instanceof CropsBlock && !((CropsBlock) block).isMaxAge(toHarvest)) {
                     this.validFarmlandAroundVillager.remove(this.aboveFarmlandPos);
                     this.aboveFarmlandPos = this.getValidFarmland(world);
                     if (this.aboveFarmlandPos != null) {
                         this.nextOkStartTime = p_212833_3_ + 20L;
-                        villager.getBrain().setMemory(MemoryModuleType.WALK_TARGET, new WalkTarget(new BlockPosTracker(this.aboveFarmlandPos), 0.5F, 1));
-                        villager.getBrain().setMemory(MemoryModuleType.LOOK_TARGET, new BlockPosTracker(this.aboveFarmlandPos));
+                        villager.getBrain().setMemory(MemoryModuleType.WALK_TARGET, new WalkTarget(new BlockPosWrapper(this.aboveFarmlandPos), 0.5F, 1));
+                        villager.getBrain().setMemory(MemoryModuleType.LOOK_TARGET, new BlockPosWrapper(this.aboveFarmlandPos));
                     }
                 }
             }
