@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.smarterfarmers.mixins;
 
 
+import com.mojang.datafixers.util.Pair;
+import net.mehvahdjukaar.smarterfarmers.MySortedMap;
 import net.mehvahdjukaar.smarterfarmers.SmarterFarmers;
 import net.minecraft.world.entity.animal.Fox;
 import net.minecraft.world.level.block.*;
@@ -27,7 +29,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Mixin({HarvestFarmland.class})
 public abstract class FarmTaskMixin {
@@ -76,9 +79,9 @@ public abstract class FarmTaskMixin {
                     toReplace = block.asItem();
                     world.destroyBlock(this.aboveFarmlandPos, true, villager);
                 }
-                if(CaveVines.hasGlowBerries(toHarvest)){
-                    CaveVines.use(toHarvest, world, this.aboveFarmlandPos);
-                }
+                //if(CaveVines.hasGlowBerries(toHarvest)){
+                //    CaveVines.use(toHarvest, world, this.aboveFarmlandPos);
+                //}
 
                 //check if block is empty to replant
                 if (world.getBlockState(this.aboveFarmlandPos).isAir() && farmlandBlock instanceof FarmBlock) {
@@ -87,7 +90,7 @@ public abstract class FarmTaskMixin {
 
                     ItemStack itemStack = ItemStack.EMPTY;
                     boolean canPlant = false;
-                    int ind = 0;
+                    int ind = -1;
                     if (toReplace != Items.AIR && toReplace instanceof BlockItem) {
                         for (int i = 0; i < inventory.getContainerSize(); ++i) {
                             itemStack = inventory.getItem(i);
@@ -101,18 +104,48 @@ public abstract class FarmTaskMixin {
 
                     //normal behavior
                     if (!canPlant) {
+
+                        MySortedMap<Block> map = new MySortedMap<>();
+
+                        map.add(world.getBlockState(aboveFarmlandPos.north()).getBlock());
+                        map.add(world.getBlockState(aboveFarmlandPos.south()).getBlock());
+                        map.add(world.getBlockState(aboveFarmlandPos.east()).getBlock());
+                        map.add(world.getBlockState(aboveFarmlandPos.west()).getBlock());
+                        List<Block> surroundingBlocks = new ArrayList<>();
+                        map.entrySet().stream().sorted(Map.Entry.comparingByValue()).forEach(e ->surroundingBlocks.add(e.getKey()));
+
+
+                        Map<Block, Integer> availableSeeds = new HashMap<>();
                         for (int i = 0; i < inventory.getContainerSize(); ++i) {
                             itemStack = inventory.getItem(i);
                             Item it = itemStack.getItem();
                             if (SmarterFarmers.isValidSeed(it)) {
-                                if (((IPlantable) ((BlockItem) it).getBlock()).getPlantType(world, aboveFarmlandPos) == PlantType.CROP) {
-                                    canPlant = true;
-                                    ind = i;
-                                    break;
+                                Block plantBlock = ((BlockItem) it).getBlock();
+                                if (((IPlantable)plantBlock).getPlantType(world, aboveFarmlandPos) == PlantType.CROP) {
+                                    availableSeeds.put(plantBlock, i);
                                 }
                             }
                         }
+
+                        for(Block b : surroundingBlocks){
+                            if(availableSeeds.containsKey(b)){
+                                ind = availableSeeds.get(b);
+                                canPlant = true;
+                                itemStack = inventory.getItem(ind);
+                                break;
+                            }
+                        }
+                        if(!canPlant) {
+                            Optional<Integer> opt = availableSeeds.values().stream().findFirst();
+                            if (opt.isPresent()) {
+                                ind = opt.get();
+                                canPlant = true;
+                                itemStack = inventory.getItem(ind);
+                            }
+                        }
                     }
+
+
 
                     if (canPlant) {
                         world.setBlock(aboveFarmlandPos, ((IPlantable) ((BlockItem) itemStack.getItem()).getBlock()).getPlant(world, aboveFarmlandPos), 3);
