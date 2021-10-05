@@ -1,17 +1,14 @@
 package net.mehvahdjukaar.smarterfarmers.mixins;
 
 
-import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.smarterfarmers.MySortedMap;
 import net.mehvahdjukaar.smarterfarmers.SmarterFarmers;
 import net.minecraft.block.*;
-import net.minecraft.client.audio.SoundSource;
 import net.minecraft.entity.ai.brain.memory.MemoryModuleType;
 import net.minecraft.entity.ai.brain.memory.WalkTarget;
 import net.minecraft.entity.ai.brain.task.FarmTask;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.container.Container;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -30,7 +27,6 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Mixin({FarmTask.class})
 public abstract class FarmTaskMixin {
