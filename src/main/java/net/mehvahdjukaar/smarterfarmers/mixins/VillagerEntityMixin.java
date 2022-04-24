@@ -5,14 +5,14 @@ import net.mehvahdjukaar.smarterfarmers.SmarterFarmers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.npc.AbstractVillager;
-import net.minecraft.world.entity.npc.VillagerData;
 import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.npc.VillagerData;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import org.spongepowered.asm.mixin.Final;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -25,21 +25,22 @@ import java.util.Map;
 public abstract class VillagerEntityMixin extends AbstractVillager {
 
 
-    @Shadow public static Map<Item, Integer> FOOD_POINTS;
+    @Shadow
+    public static Map<Item, Integer> FOOD_POINTS;
 
-    public VillagerEntityMixin(EntityType<? extends AbstractVillager> p_i50185_1_, Level p_i50185_2_) {
-        super(p_i50185_1_, p_i50185_2_);
+    public VillagerEntityMixin(EntityType<? extends AbstractVillager> entityType, Level level) {
+        super(entityType, level);
     }
 
     @Inject(method = {"wantsToPickUp"}, at = {@At("HEAD")}, cancellable = true)
     private void wantsToPickUp(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
         Item i = stack.getItem();
-        if(FOOD_POINTS.containsKey(i)){
+        if (FOOD_POINTS.containsKey(i)) {
             cir.setReturnValue(true);
             cir.cancel();
         }
         //prevent non farmers from stealing seeds
-        else if(SmarterFarmers.isValidSeed(i)){
+        else if (SmarterFarmers.isValidSeed(i)) {
             boolean grab = this.getVillagerData().getProfession() == VillagerProfession.FARMER && this.getInventory().canAddItem(stack);
             cir.setReturnValue(grab);
             cir.cancel();
@@ -51,9 +52,9 @@ public abstract class VillagerEntityMixin extends AbstractVillager {
 
 
     @Override
-    public boolean canTrample(BlockState state, BlockPos pos, float fallDistance) {
+    public boolean canTrample(@NotNull BlockState state, @NotNull BlockPos pos, float fallDistance) {
         //prevents trampling
-        if(this.getVillagerData().getProfession() == VillagerProfession.FARMER) return false;
+        if (this.getVillagerData().getProfession() == VillagerProfession.FARMER) return false;
         return super.canTrample(state, pos, fallDistance);
     }
 }

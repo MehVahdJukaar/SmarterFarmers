@@ -1,0 +1,23 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:grass",
+    "minecraft:fern",
+    {"id":"immersive_weathering:weeds","required":false},
+    {"id":"heftycrops:hefty_beetroot","required":false},
+    {"id":"heftycrops:hefty_carrot","required":false},
+    {"id":"heftycrops:hefty_potato","required":false},
+    {"id":"heftycrops:hefty_cocoa","required":false},
+    {"id":"heftycrops:hefty_cabbage","required":false},
+    {"id":"heftycrops:hefty_onion","required":false},
+    {"id":"heftycrops:hefty_tomato","required":false},
+    {"id":"overweight_farming:overweight_tomato_block","required":false},
+    {"id":"overweight_farming:overweight_onion_block","required":false},
+    {"id":"overweight_farming:overweight_carrot_block","required":false},
+    {"id":"overweight_farming:overweight_cabbage_block","required":false},
+    {"id":"overweight_farming:overweight_ginger_block","required":false},
+    {"id":"overweight_farming:overweight_beetroot_block","required":false},
+    {"id":"overweight_farming:overweight_cocoa_block","required":false},
+    {"id":"overweight_farming:overweight_potato_block","required":false}
+  ]
+}

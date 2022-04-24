@@ -1,5 +1,8 @@
 package net.mehvahdjukaar.smarterfarmers;
 
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Fox;
 import net.minecraft.world.item.*;
@@ -49,10 +52,13 @@ public class SmarterFarmers {
     }
 
     public static boolean isValidSeed(Item item) {
-        if (item instanceof BlockItem) {
-            Block b = ((BlockItem) item).getBlock();
+        if (item instanceof BlockItem blockItem) {
+            Block b = blockItem.getBlock();
             return b instanceof IPlantable && !(b instanceof StemBlock);
         }
         return false;
     }
+
+    public static final TagKey<Block> CROP_REPLACEABLE = BlockTags.create(new ResourceLocation(MOD_ID,"crop_replaceable"));
+    public static final TagKey<Block> CROP_PLANTABLE = BlockTags.create(new ResourceLocation(MOD_ID,"crop_plantable"));
 }

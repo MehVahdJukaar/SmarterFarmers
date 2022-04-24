@@ -6,8 +6,8 @@ import java.util.TreeMap;
 public class MySortedMap <T> extends HashMap<T, Integer> {
 
     public void add(T value) {
-        Integer count = -1;
-        if(this.containsKey(value)) count --;
+        int count = -1;
+        if(this.containsKey(value)) count = this.get(value) -1;
         this.put(value, count);
     }
 }

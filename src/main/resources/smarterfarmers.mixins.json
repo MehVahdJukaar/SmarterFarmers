@@ -2,12 +2,13 @@
 {
   "minVersion": "0.8.4",
   "required": true,
-  "compatibilityLevel": "JAVA_16",
+  "compatibilityLevel": "JAVA_17",
   "refmap": "smarterfarmers.refmap.json",
   "package": "net.mehvahdjukaar.smarterfarmers.mixins",
   "mixins": [
     "FarmTaskMixin",
     "SweetBerryBushMixin",
+    "UseBonemealMixin",
     "VillagerEntityMixin"
   ],
   "client": [
