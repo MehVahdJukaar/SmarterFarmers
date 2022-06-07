@@ -7,7 +7,6 @@
   "package": "net.mehvahdjukaar.smarterfarmers.mixins",
   "mixins": [
     "FarmTaskMixin",
-    "SweetBerryBushMixin",
     "UseBonemealMixin",
     "VillagerEntityMixin"
   ],

@@ -3,6 +3,7 @@ package net.mehvahdjukaar.smarterfarmers.mixins;
 
 import net.mehvahdjukaar.smarterfarmers.SmarterFarmers;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.Villager;
@@ -41,7 +42,7 @@ public abstract class VillagerEntityMixin extends AbstractVillager {
         }
         //prevent non farmers from stealing seeds
         else if (SmarterFarmers.isValidSeed(i)) {
-            boolean grab = this.getVillagerData().getProfession() == VillagerProfession.FARMER && this.getInventory().canAddItem(stack);
+            boolean grab = isFarmer() && this.getInventory().canAddItem(stack);
             cir.setReturnValue(grab);
             cir.cancel();
         }
@@ -50,12 +51,22 @@ public abstract class VillagerEntityMixin extends AbstractVillager {
     @Shadow
     public abstract VillagerData getVillagerData();
 
-
     @Override
     public boolean canTrample(@NotNull BlockState state, @NotNull BlockPos pos, float fallDistance) {
         //prevents trampling
-        if (this.getVillagerData().getProfession() == VillagerProfession.FARMER) return false;
+        if (isFarmer()) return false;
         return super.canTrample(state, pos, fallDistance);
     }
+
+    private boolean isFarmer() {
+        return this.getVillagerData().getProfession() == VillagerProfession.FARMER;
+    }
+
+    @Override
+    public boolean isInvulnerableTo(@NotNull DamageSource pSource) {
+        if (pSource == DamageSource.SWEET_BERRY_BUSH && isFarmer()) return true;
+        return super.isInvulnerableTo(pSource);
+    }
+
 }
 
