@@ -4,6 +4,7 @@ package net.mehvahdjukaar.smarterfarmers.mixins;
 import net.mehvahdjukaar.smarterfarmers.SmarterFarmers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityEvent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.Villager;
@@ -67,6 +68,18 @@ public abstract class VillagerEntityMixin extends AbstractVillager {
         if (pSource == DamageSource.SWEET_BERRY_BUSH && isFarmer()) return true;
         return super.isInvulnerableTo(pSource);
     }
+
+    @Override
+    public void handleEntityEvent(byte pId) {
+        super.handleEntityEvent(pId);
+        if (pId == EntityEvent.FOX_EAT) { //using this one
+            if (this.level.isClientSide) {
+                //copied from haunted harvest
+                SmarterFarmers.spawnEatingParticles(this);
+            }
+        }
+    }
+
 
 }
 

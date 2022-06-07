@@ -3,15 +3,22 @@ package net.mehvahdjukaar.smarterfarmers;
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.selene.villager_ai.VillagerBrainEvent;
 import net.mehvahdjukaar.smarterfarmers.goal.EatFoodGoal;
+import net.mehvahdjukaar.smarterfarmers.mixins.FarmTaskMixin;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.item.*;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.StemBlock;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -84,6 +91,21 @@ public class SmarterFarmers {
         //babies do not eat
         if(!event.getVillager().isBaby())
         event.addTaskToActivity(Activity.MEET, Pair.of(7, new EatFoodGoal(100, 140)));
+    }
+
+    public static void spawnEatingParticles(AbstractVillager villager) {
+        Vec3 pos = new Vec3(0, 0, 0.4);
+        //pos = pos.xRot(pOwner.getXRot() * ((float) Math.PI / 180F));
+        //particle accuracy is shit because yRot isnt synced properly. being a server side mod we cant do better
+        pos = pos.yRot((-villager.yBodyRot) * ((float) Math.PI / 180F));
+        pos = pos.add(villager.getX(), villager.getEyeY(), villager.getZ());
+        ItemStack stack = villager.getMainHandItem();
+        Level level = villager.getLevel();
+        level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, stack),
+                pos.x + Mth.randomBetween(level.random, -0.05f,0.05f),
+                pos.y - 0.4 + Mth.randomBetween(level.random, -0.05f,0.05f),
+                pos.z + Mth.randomBetween(level.random, -0.05f,0.05f),
+                0.03, 0.05, 0.03);
     }
 
 }

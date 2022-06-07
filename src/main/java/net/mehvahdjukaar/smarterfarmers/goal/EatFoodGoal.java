@@ -6,6 +6,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.EntityEvent;
 import net.minecraft.world.entity.ai.behavior.Behavior;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
@@ -34,7 +35,6 @@ public class EatFoodGoal extends Behavior<Villager> {
 
     @Override
     protected boolean checkExtraStartConditions(ServerLevel pLevel, Villager pOwner) {
-        if(true)return true;
         if (cooldown > 0){
             cooldown--;
             return false;
@@ -85,17 +85,7 @@ public class EatFoodGoal extends Behavior<Villager> {
             if (stack.isEmpty()) return;
 
             if (eatingTime % 2 == 0) {
-
-                //copied from haunted harvest
-                Vec3 pos = new Vec3(0, 0, 1D);
-                //pos = pos.xRot(pOwner.getXRot() * ((float) Math.PI / 180F));
-                //particle accuracy is shit because yRot isnt synced properly. being a server side mod we cant do better
-                pos = pos.yRot((-pOwner.getYRot()) * ((float) Math.PI / 180F));
-                pos = pos.add(pOwner.getX(), pOwner.getEyeY(), pOwner.getZ());
-
-                pLevel.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, stack),
-                        pos.x, pos.y - 0.4, pos.z, 2,
-                        0.03, 0.05, 0.03, 0.0D);
+                pLevel.broadcastEntityEvent(pOwner, EntityEvent.FOX_EAT);
 
             }
             if (eatingTime % 5 == 0) {
@@ -116,7 +106,7 @@ public class EatFoodGoal extends Behavior<Villager> {
                 pEntity.heal(i);
 
                 item.finishUsingItem(stack, pLevel, pEntity);
-                this.cooldown = 20 * (5 + pLevel.random.nextInt(18)) + pLevel.random.nextInt(20);
+                this.cooldown = 20 * (4 + pLevel.random.nextInt(14)) + pLevel.random.nextInt(20);
             }
         }
         pEntity.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
