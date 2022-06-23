@@ -73,6 +73,7 @@ public class SmarterFarmers {
             }
             Villager.FOOD_POINTS = newMap;
         } catch (Exception e) {
+
             LOGGER.warn("Failed to add custom foods to villagers");
         }
     }
