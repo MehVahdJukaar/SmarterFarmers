@@ -25,7 +25,8 @@ public class EatFoodGoal extends Behavior<Villager> {
     private int buffer = 40;
 
     public EatFoodGoal(int minDur, int maxDur) {
-        super(ImmutableMap.of(MemoryModuleType.WALK_TARGET, MemoryStatus.VALUE_ABSENT,
+        super(ImmutableMap.of(
+                //MemoryModuleType.WALK_TARGET, MemoryStatus.VALUE_ABSENT,
                 MemoryModuleType.INTERACTION_TARGET, MemoryStatus.VALUE_ABSENT,
                 MemoryModuleType.HURT_BY_ENTITY, MemoryStatus.VALUE_ABSENT,
                 MemoryModuleType.HURT_BY, MemoryStatus.VALUE_ABSENT,
@@ -62,8 +63,10 @@ public class EatFoodGoal extends Behavior<Villager> {
         SimpleContainer inventory = pEntity.getInventory();
         for (int i = 0; i < inventory.getContainerSize(); ++i) {
             ItemStack itemstack = inventory.getItem(i);
-            if (Villager.FOOD_POINTS.get(itemstack.getItem()) != null) {
-                ItemStack s = itemstack.split(1);
+            var food = Villager.FOOD_POINTS.get(itemstack.getItem());
+            if (food != null) {
+                ItemStack s = itemstack.copy();
+                s.setCount(1);
                 if (itemstack.getCount() == 0) inventory.setItem(i, ItemStack.EMPTY);
                 pEntity.setItemInHand(InteractionHand.MAIN_HAND, s);
             }
@@ -100,15 +103,23 @@ public class EatFoodGoal extends Behavior<Villager> {
         super.stop(pLevel, pEntity, pGameTime);
         ItemStack stack = pEntity.getMainHandItem();
         Item item = stack.getItem();
-        if (item != Items.AIR && eatingTime <= 0) {
-            Integer i = Villager.FOOD_POINTS.get(item);
-            if (i != null) {
-                pEntity.heal(i);
+        pEntity.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
 
-                item.finishUsingItem(stack, pLevel, pEntity);
-                this.cooldown = 20 * (4 + pLevel.random.nextInt(14)) + pLevel.random.nextInt(20);
+        if (item != Items.AIR && eatingTime <= 0) {
+            Integer food = Villager.FOOD_POINTS.get(item);
+            if (food != null) {
+                for (int i = 0; i < pEntity.getInventory().getContainerSize(); ++i) {
+                    ItemStack s = pEntity.getInventory().getItem(i);
+                    if(s.getItem() == item){
+                        s.split(1);
+                        pEntity.heal(Math.max(1,food));
+
+                        item.finishUsingItem(stack, pLevel, pEntity);
+                        this.cooldown = 20 * (4 + pLevel.random.nextInt(14)) + pLevel.random.nextInt(20);
+                        return;
+                    }
+                }
             }
         }
-        pEntity.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
     }
 }

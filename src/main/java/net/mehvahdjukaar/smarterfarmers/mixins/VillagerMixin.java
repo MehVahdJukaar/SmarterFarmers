@@ -23,14 +23,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Map;
 
-@Mixin({Villager.class})
-public abstract class VillagerEntityMixin extends AbstractVillager {
+@Mixin(Villager.class)
+public abstract class VillagerMixin extends AbstractVillager {
 
 
     @Shadow
     public static Map<Item, Integer> FOOD_POINTS;
 
-    public VillagerEntityMixin(EntityType<? extends AbstractVillager> entityType, Level level) {
+    @Shadow public abstract VillagerData getVillagerData();
+
+    public VillagerMixin(EntityType<? extends AbstractVillager> entityType, Level level) {
         super(entityType, level);
     }
 
@@ -48,9 +50,6 @@ public abstract class VillagerEntityMixin extends AbstractVillager {
             cir.cancel();
         }
     }
-
-    @Shadow
-    public abstract VillagerData getVillagerData();
 
     @Override
     public boolean canTrample(@NotNull BlockState state, @NotNull BlockPos pos, float fallDistance) {

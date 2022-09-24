@@ -1,42 +1,41 @@
+modLoader = "javafml" #mandatory
 
-modLoader="javafml" #mandatory
+loaderVersion = "[40,)" #mandatory This is typically bumped every Minecraft version by Forge. See our download page for lists of versions.
 
-loaderVersion="[38,)" #mandatory This is typically bumped every Minecraft version by Forge. See our download page for lists of versions.
-
-license="All rights reserved"
+license = "All rights reserved"
 
 [[mods]] #mandatory
 
-    modId="smarterfarmers" #mandatory
-    version="${file.jarVersion}" #mandatory
-    displayName="Smarter Farmers" #mandatory
-    logoFile="icon.png" #optional
-    credits="Me" #optional
-    authors="MehVahdJukaar" #optional
+modId = "smarterfarmers" #mandatory
+version = "${file.jarVersion}" #mandatory
+displayName = "Smarter Farmers" #mandatory
+logoFile = "icon.png" #optional
+credits = "Me" #optional
+authors = "MehVahdJukaar" #optional
 
-    itemIcon="minecraft:carrot" #catalogue icon
-    description='''
+itemIcon = "minecraft:carrot" #catalogue icon
+description = '''
     Makes Farmer Villagers smarter!
     '''
 
 [[dependencies.smarterfarmers]] #optional
-    modId="forge" #mandatory
-    mandatory=true #mandatory
-    versionRange="[38,)" #mandatory
-    ordering="NONE"
-    side="BOTH"
+modId = "forge" #mandatory
+mandatory = true #mandatory
+versionRange = "[40,)" #mandatory
+ordering = "NONE"
+side = "BOTH"
 
 [[dependencies.smarterfarmers]]
-    modId="minecraft"
-    mandatory=true
-    versionRange="[1.18,1.19)"
-    ordering="NONE"
-    side="BOTH"
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.19,1.20)"
+ordering = "NONE"
+side = "BOTH"
 
 [[dependencies.smarterfarmers]]
 
-    modId="selene"
-    mandatory=true
-    versionRange="[1.18.2-1.16.0,]"
-    ordering="NONE"
-    side="SERVER"
+modId = "moonlight"
+mandatory = true
+versionRange = "[1.19.2-2.0.16,]"
+ordering = "NONE"
+side = "SERVER"

@@ -1,9 +1,8 @@
 package net.mehvahdjukaar.smarterfarmers;
 
 import com.mojang.datafixers.util.Pair;
-import net.mehvahdjukaar.selene.villager_ai.VillagerBrainEvent;
+import net.mehvahdjukaar.moonlight.api.events.forge.VillagerBrainEvent;
 import net.mehvahdjukaar.smarterfarmers.goal.EatFoodGoal;
-import net.mehvahdjukaar.smarterfarmers.mixins.FarmTaskMixin;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
@@ -89,14 +88,15 @@ public class SmarterFarmers {
     @SubscribeEvent
     public void onVillagerBrainInitialize(VillagerBrainEvent event) {
         //babies do not eat
-        if(!event.getVillager().isBaby())
-        event.addTaskToActivity(Activity.MEET, Pair.of(7, new EatFoodGoal(100, 140)));
+        if(!event.getVillager().isBaby()) {
+            event.addTaskToActivity(Activity.MEET, Pair.of(7, new EatFoodGoal(100, 140)));
+        }
     }
 
     public static void spawnEatingParticles(AbstractVillager villager) {
         Vec3 pos = new Vec3(0, 0, 0.4);
         //pos = pos.xRot(pOwner.getXRot() * ((float) Math.PI / 180F));
-        //particle accuracy is shit because yRot isnt synced properly. being a server side mod we cant do better
+        //particle accuracy is shit because yRot isn't synced properly. being a server side mod we can't do better
         pos = pos.yRot((-villager.yBodyRot) * ((float) Math.PI / 180F));
         pos = pos.add(villager.getX(), villager.getEyeY(), villager.getZ());
         ItemStack stack = villager.getMainHandItem();
@@ -106,6 +106,7 @@ public class SmarterFarmers {
                 pos.y - 0.4 + Mth.randomBetween(level.random, -0.05f,0.05f),
                 pos.z + Mth.randomBetween(level.random, -0.05f,0.05f),
                 0.03, 0.05, 0.03);
+
     }
 
 }

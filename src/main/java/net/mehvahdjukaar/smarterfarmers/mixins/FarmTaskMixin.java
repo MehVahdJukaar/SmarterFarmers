@@ -96,6 +96,7 @@ public abstract class FarmTaskMixin {
 
     /**
      * @author MehVahdJukaar
+     * @reason Smarter Farmers Mod, overhauled farm task logic
      */
     @Overwrite
     protected boolean validPos(BlockPos pPos, ServerLevel pLevel) {
@@ -107,10 +108,11 @@ public abstract class FarmTaskMixin {
     }
 
 
-    //TODO: this broke in 1.18 for modded stuff. redo from scratch
+    //TODO: this broke in 1.18 for modded stuff. redo from scratch (?)
 
     /**
      * @author MehVahdJukaar
+     * @reason Smarter Farmers Mod, overhauled farm task logic
      */
     @Overwrite
     protected void tick(ServerLevel world, Villager villager, long l) {

@@ -37,7 +37,7 @@ println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getPro
 minecraft {
 
     if(project.parchment_enabled == "true"){
-        mappings channel: 'parchment', version: "${project.parchment_version}-${project.minecraft_version}"
+        mappings channel: 'parchment', version: "${project.minecraft_version}"
     }else{
         mappings channel: 'official', version: "${project.minecraft_version}"
     }
@@ -131,18 +131,21 @@ publishing {
 
 dependencies {
 
-    minecraft "net.minecraftforge:forge:${project.minecraft_version}-${project.forge_version}"
+    minecraft "net.minecraftforge:forge:${project.forge_version}"
 
+    /*
     implementation fg.deobf("curse.maven:farmersdelight-398521:3739914")
 
     implementation fg.deobf("curse.maven:configured-457570:3640884")
     implementation fg.deobf("curse.maven:jei-238222:3682513")
     implementation fg.deobf("curse.maven:jade-324717:3681449")
-    implementation fg.deobf("curse.maven:crimson-nbt-tags-445260:3670163")
+    )
     implementation fg.deobf("curse.maven:hefty-crops-591786:3750797")
-    implementation fg.deobf("curse.maven:overweight-farming-591666:3753570")
+    implementation fg.deobf("curse.maven:overweight-farming-591666:3753570")*/
 
+    implementation fg.deobf("curse.maven:selene-499980:3949260")
  //   implementation fg.deobf("curse.maven:immersive-weathering-forge-592449:3764895")
+    //implementation ("net.mehvahdjukaar:moonlight-forge:${project.moonlight_version}")
 
     annotationProcessor "org.spongepowered:mixin:${project.mixin_version}:processor"
 }
