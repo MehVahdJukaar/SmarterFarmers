@@ -155,6 +155,7 @@ public abstract class FarmTaskMixin {
                     if (canBreakNoReplant(toHarvest)) {
                         this.timeWorkedSoFar++;
                         //dont replant pumpkins
+                        ci.cancel();
                         return;
                     }
                 } else if (this.canHarvest(toHarvest)) {
