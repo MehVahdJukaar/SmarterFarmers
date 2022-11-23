@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "smarterfarmers",
+  "version": "${version}",
+  "name": "Smarter Farmers",
+  "description": "Makes Farmer Villagers smarter!",
+  "authors": [
+    "Mehvahdjukaar"
+  ],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/smarterfarmers",
+    "sources": "https://github.com/MehVahdJukaar/smarterfarmers"
+  },
+  "license": "ARR",
+  "icon": "icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.mehvahdjukaar.smarterfarmers.fabric.SmarterFarmersFabric"
+    ]
+  },
+  "mixins": [
+    "${mod_id}.mixins.json",
+    "${mod_id}-common.mixins.json"
+  ],
+  "depends": {
+    "fabric": "*",
+    "minecraft": ">=1.19.2",
+    "moonlight": ">=1.19.2-2.0.35"
+  }
+}

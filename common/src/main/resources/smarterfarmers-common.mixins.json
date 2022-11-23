@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.mehvahdjukaar.smarterfarmers.mixins",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+  ],
+  "mixins": [
+    "FarmTaskMixin",
+    "UseBonemealMixin",
+    "VillagerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

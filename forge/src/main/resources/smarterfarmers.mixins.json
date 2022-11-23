@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.mehvahdjukaar.smarterfarmers.mixins.forge",
+  "compatibilityLevel": "JAVA_16",
+  "client": [
+  ],
+  "mixins": [
+    "VillagerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
