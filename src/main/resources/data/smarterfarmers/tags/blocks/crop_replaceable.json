@@ -19,5 +19,55 @@
     {"id":"overweight_farming:overweight_beetroot_block","required":false},
     {"id":"overweight_farming:overweight_cocoa_block","required":false},
     {"id":"overweight_farming:overweight_potato_block","required":false}
+    {"id":"croparia:seed_crop_xp","required":false}
+    {"id":"croparia:seed_crop_egg","required":false}
+    {"id":"croparia:seed_crop_eye","required":false}
+    {"id":"croparia:seed_crop_ink","required":false}
+    {"id":"croparia:seed_crop_oak","required":false}
+    {"id":"croparia:seed_crop_red","required":false}
+    {"id":"croparia:seed_crop_sea","required":false}
+    {"id":"croparia:seed_crop_tin","required":false}
+    {"id":"croparia:seed_crop_blue","required":false}
+    {"id":"croparia:seed_crop_bone","required":false}
+    {"id":"croparia:seed_crop_bush","required":false}
+    {"id":"croparia:seed_crop_clay","required":false}
+    {"id":"croparia:seed_crop_coal","required":false}
+    {"id":"croparia:seed_crop_cyan","required":false}
+    {"id":"croparia:seed_crop_fern","required":false}
+    {"id":"croparia:seed_crop_fish","required":false}
+    {"id":"croparia:seed_crop_foot","required":false}
+    {"id":"croparia:seed_crop_goat","required":false}
+    {"id":"croparia:seed_crop_gold","required":false}
+    {"id":"croparia:seed_crop_gray","required":false}
+    {"id":"croparia:seed_crop_hide","required":false}
+    {"id":"croparia:seed_crop_iron","required":false}
+    {"id":"croparia:seed_crop_lead","required":false}
+    {"id":"croparia:seed_crop_lime","required":false}
+    {"id":"croparia:seed_crop_pink","required":false}
+    {"id":"croparia:seed_crop_star","required":false}
+    {"id":"croparia:seed_crop_vine","required":false}
+    {"id":"croparia:seed_crop_apple","required":false}
+    {"id":"croparia:seed_crop_birch","required":false}
+    {"id":"croparia:seed_crop_black","required":false}
+    {"id":"croparia:seed_crop_blaze","required":false}
+    {"id":"croparia:seed_crop_bread","required":false}
+    {"id":"croparia:seed_crop_brown","required":false}
+    {"id":"croparia:seed_crop_ender","required":false}
+    {"id":"croparia:seed_crop_fiery","required":false}
+    {"id":"croparia:seed_crop_flint","required":false}
+    {"id":"croparia:seed_crop_ghast","required":false}
+    {"id":"croparia:seed_crop_grass","required":false}
+    {"id":"croparia:seed_crop_green","required":false}
+    {"id":"croparia:seed_crop_invar","required":false}
+    {"id":"croparia:seed_crop_lapis","required":false}
+    {"id":"croparia:seed_crop_lead2","required":false}
+    {"id":"croparia:seed_crop_magma","required":false}
+    {"id":"croparia:seed_crop_paper","required":false}
+    {"id":"croparia:seed_crop_scute","required":false}
+    {"id":"croparia:seed_crop_shard","required":false}
+    {"id":"croparia:seed_crop_shell","required":false}
+    {"id":"croparia:seed_crop_slime","required":false}
+    {"id":"croparia:seed_crop_steel","required":false}
+    {"id":"croparia:seed_crop_sugar","required":false}
   ]
 }
