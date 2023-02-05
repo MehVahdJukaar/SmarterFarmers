@@ -19,8 +19,10 @@ import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Map;
@@ -52,6 +54,7 @@ public abstract class VillagerMixin extends AbstractVillager {
         }
     }
 
+    @Unique
     private boolean isFarmer() {
         return this.getVillagerData().getProfession() == VillagerProfession.FARMER;
     }
@@ -62,9 +65,8 @@ public abstract class VillagerMixin extends AbstractVillager {
         return super.isInvulnerableTo(pSource);
     }
 
-    @Override
-    public void handleEntityEvent(byte pId) {
-        super.handleEntityEvent(pId);
+    @Inject(method = "handleEntityEvent", at = @At(value = "HEAD"))
+    public void handleEntityEvent(byte pId, CallbackInfo ci) {
         if (pId == EntityEvent.FOX_EAT) { //using this one
             if (this.level.isClientSide) {
                 //copied from haunted harvest
@@ -72,7 +74,6 @@ public abstract class VillagerMixin extends AbstractVillager {
             }
         }
     }
-
 
 }
 
