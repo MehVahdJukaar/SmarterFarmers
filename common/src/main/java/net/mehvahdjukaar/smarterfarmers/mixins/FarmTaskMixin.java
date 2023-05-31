@@ -33,7 +33,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.*;
 
-@Mixin({HarvestFarmland.class})
+@Mixin(value = {HarvestFarmland.class}, priority = 500)
 public abstract class FarmTaskMixin {
 
 
@@ -144,27 +144,30 @@ public abstract class FarmTaskMixin {
 
                 Item toReplace = Items.AIR;
 
-                //break crop
-                if (canSpecialBreak(toHarvest)) {
-                    level.destroyBlock(this.aboveFarmlandPos, true, villager);
-                    var below = level.getBlockState(belowPos);
-                    if (below.is(Blocks.DIRT)) {
-                        level.setBlock(belowPos, Blocks.FARMLAND.defaultBlockState(), 11);
-                        level.playSound(null, belowPos, SoundEvents.HOE_TILL, SoundSource.BLOCKS, 1.0F, 1.0F);
+                if(!toHarvest.isAir()) {
+
+                    //break crop
+                    if (canSpecialBreak(toHarvest)) {
+                        level.destroyBlock(this.aboveFarmlandPos, true, villager);
+                        var below = level.getBlockState(belowPos);
+                        if (below.is(Blocks.DIRT)) {
+                            level.setBlock(belowPos, Blocks.FARMLAND.defaultBlockState(), 11);
+                            level.playSound(null, belowPos, SoundEvents.HOE_TILL, SoundSource.BLOCKS, 1.0F, 1.0F);
+                        }
+                        if (canBreakNoReplant(toHarvest)) {
+                            this.timeWorkedSoFar++;
+                            //dont replant pumpkins
+                            ci.cancel();
+                            return;
+                        }
+                    } else if (this.canHarvest(toHarvest)) {
+                        toReplace = block.asItem();
+                        level.destroyBlock(this.aboveFarmlandPos, true, villager);
                     }
-                    if (canBreakNoReplant(toHarvest)) {
-                        this.timeWorkedSoFar++;
-                        //dont replant pumpkins
-                        ci.cancel();
-                        return;
-                    }
-                } else if (this.canHarvest(toHarvest)) {
-                    toReplace = block.asItem();
-                    level.destroyBlock(this.aboveFarmlandPos, true, villager);
+                    //if(CaveVines.hasGlowBerries(toHarvest)){
+                    //    CaveVines.use(toHarvest, level, this.aboveFarmlandPos);
+                    //}
                 }
-                //if(CaveVines.hasGlowBerries(toHarvest)){
-                //    CaveVines.use(toHarvest, level, this.aboveFarmlandPos);
-                //}
 
                 BlockState farmlandBlock = level.getBlockState(belowPos);
 
