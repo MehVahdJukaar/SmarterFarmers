@@ -45,7 +45,6 @@ public class SFPlatformStuffImpl {
                 .getPlant(world, pos);
     }
 
-    HarvestFarmland
 
     public static boolean isValidSeed(Item i) {
         if (i instanceof BlockItem blockItem) {

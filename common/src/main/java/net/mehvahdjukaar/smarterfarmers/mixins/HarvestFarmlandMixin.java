@@ -129,7 +129,7 @@ public abstract class HarvestFarmlandMixin {
                 BlockState farmlandBlock = level.getBlockState(belowPos);
 
                 //check if toHarvestBlock is empty to replant
-                if (level.getBlockState(this.aboveFarmlandPos).isAir() && canPlantOn(farmlandBlock)) {
+                if (level.getBlockState(this.aboveFarmlandPos).isAir() && FarmTaskLogic.isValidFarmland(farmlandBlock)) {
                     SimpleContainer inventory = villager.getInventory();
 
 
@@ -202,7 +202,8 @@ public abstract class HarvestFarmlandMixin {
 
                 }
 
-                if (toHarvest.getBlock() instanceof CropBlock cropBlock && !cropBlock.isMaxAge(toHarvest)) {
+                //if it grew in became invalid in the meantime (somehow)
+                if (!FarmTaskLogic.isCropMature(toHarvest)) {
                     this.validFarmlandAroundVillager.remove(this.aboveFarmlandPos);
                     this.aboveFarmlandPos = this.getValidFarmland(level);
                     if (this.aboveFarmlandPos != null) {
