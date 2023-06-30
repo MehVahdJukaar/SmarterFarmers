@@ -2,12 +2,15 @@ package net.mehvahdjukaar.smarterfarmers.mixins;
 
 
 import net.mehvahdjukaar.smarterfarmers.CountOrderedSortedMap;
+import net.mehvahdjukaar.smarterfarmers.FarmTaskLogic;
 import net.mehvahdjukaar.smarterfarmers.SFPlatformStuff;
 import net.mehvahdjukaar.smarterfarmers.SmarterFarmers;
+import net.mehvahdjukaar.smarterfarmers.integration.QuarkIntegration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.behavior.BlockPosTracker;
@@ -21,12 +24,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -34,7 +32,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.*;
 
 @Mixin(value = {HarvestFarmland.class}, priority = 500)
-public abstract class FarmTaskMixin {
+public abstract class HarvestFarmlandMixin {
 
 
     @Shadow
@@ -50,81 +48,36 @@ public abstract class FarmTaskMixin {
     @Shadow
     protected abstract BlockPos getValidFarmland(ServerLevel serverLevel);
 
-
-    private boolean canHarvest(BlockState state) {
-        Block b = state.getBlock();
-        if (state.isAir()) return false;
-        return ((b instanceof CropBlock crop && crop.isMaxAge(state)) ||
-                b instanceof SweetBerryBushBlock && state.getValue(SweetBerryBushBlock.AGE) == 2 ||
-                hardcodedCheckMaxAge(state, b)); //if previous didnt catch it (some mods dont extend crop block)
-    }
-
-    private static boolean hardcodedCheckMaxAge(BlockState state, Block b) {
-        return SFPlatformStuff.isPlantable(state) && (
-                checkAge(state, BlockStateProperties.AGE_1, 1) ||
-                        checkAge(state, BlockStateProperties.AGE_2, 2) ||
-                        checkAge(state, BlockStateProperties.AGE_3, 3) ||
-                        checkAge(state, BlockStateProperties.AGE_4, 4) ||
-                        checkAge(state, BlockStateProperties.AGE_5, 5) ||
-                        checkAge(state, BlockStateProperties.AGE_7, 7)
-        );
-    }
-
-    private static boolean checkAge(BlockState state, IntegerProperty property, int max) {
-        return state.hasProperty(property) && state.getValue(property) == max;
-    }
-
-    private boolean canSpecialBreak(BlockState state) {
-        return state.is(SmarterFarmers.SPECIAL_HARVESTABLE) || canBreakNoReplant(state);
-    }
-
-    private boolean canBreakNoReplant(BlockState state) {
-        return state.is(SmarterFarmers.NO_REPLANT);
-    }
-
-    private boolean canPlantOn(BlockState state) {
-        return state.getBlock() instanceof FarmBlock ||
-                state.is(SmarterFarmers.VALID_FARMLAND);
-    }
-
     @Inject(method = {"start(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/npc/Villager;J)V"}, at = {@At("HEAD")})
-    public void start(ServerLevel pLevel, Villager pEntity, long pGameTime, CallbackInfo ci) {
+    public void start(ServerLevel level, Villager villager, long pGameTime, CallbackInfo ci) {
         if (pGameTime > this.nextOkStartTime && this.aboveFarmlandPos != null) {
-            pEntity.setItemSlot(EquipmentSlot.MAINHAND, this.getHoe(pEntity));
+            villager.setItemSlot(EquipmentSlot.MAINHAND, FarmTaskLogic.getHoe(villager));
         }
     }
 
     @Inject(method = {"stop(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/npc/Villager;J)V"}, at = {@At("HEAD")})
-    public void stop(ServerLevel pLevel, Villager pEntity, long pGameTime, CallbackInfo ci) {
-        pEntity.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
+    public void stop(ServerLevel level, Villager villager, long pGameTime, CallbackInfo ci) {
+        villager.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
     }
 
-    protected ItemStack getHoe(Villager pEntity) {
-        return switch (pEntity.getVillagerData().getLevel()) {
-            default -> Items.IRON_HOE.getDefaultInstance();
-            case 1 -> Items.WOODEN_HOE.getDefaultInstance();
-            case 2 -> Items.STONE_HOE.getDefaultInstance();
-            case 4 -> Items.GOLDEN_HOE.getDefaultInstance();
-            case 5 -> Items.DIAMOND_HOE.getDefaultInstance();
-            case 6 -> Items.NETHERITE_HOE.getDefaultInstance();
-        };
-    }
 
     /**
      * @author MehVahdJukaar
      * @reason Smarter Farmers Mod, overhauled farm task logic
      */
     @Overwrite
-    protected boolean validPos(BlockPos pPos, ServerLevel pLevel) {
-        BlockState cropState = pLevel.getBlockState(pPos);
-        BlockState farmState = pLevel.getBlockState(pPos.below());
-        return ((cropState.isAir() || canHarvest(cropState)) && canPlantOn(farmState)) ||
-                canSpecialBreak(cropState) && (canPlantOn(farmState) || farmState.is(Blocks.DIRT));
-
+    protected boolean validPos(BlockPos pPos, ServerLevel level) {
+        BlockState cropState = level.getBlockState(pPos);
+        BlockState farmState = level.getBlockState(pPos.below());
+        if(cropState.isAir() || FarmTaskLogic.isCropMature(cropState)){
+            return FarmTaskLogic.isValidFarmland(farmState);
+        }else if(FarmTaskLogic.canSpecialBreak(cropState)){
+            return (FarmTaskLogic.isValidFarmland(farmState) || farmState.is(BlockTags.DIRT));
+        }
+        return false;
     }
 
-
-    //TODO: this broke in 1.18 for modded stuff. redo from scratch (?)
+    //TODO:  redo from scratch (?)
 
     /**
      * Basically an overwrite. Not using that cause of fabric api mixins
@@ -135,33 +88,37 @@ public abstract class FarmTaskMixin {
     //@Overwrite
     @Inject(method = "tick(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/npc/Villager;J)V",
             at = @At("HEAD"), cancellable = true)
-    public void tick(ServerLevel level, Villager villager, long l, CallbackInfo ci) {
+    public void tick(ServerLevel level, Villager villager, long tickCount, CallbackInfo ci) {
         if (this.aboveFarmlandPos == null || this.aboveFarmlandPos.closerToCenterThan(villager.position(), 1.0D)) {
-            if (this.aboveFarmlandPos != null && l > this.nextOkStartTime) {
+            if (this.aboveFarmlandPos != null && tickCount > this.nextOkStartTime) {
                 BlockState toHarvest = level.getBlockState(this.aboveFarmlandPos);
-                Block block = toHarvest.getBlock();
                 BlockPos belowPos = this.aboveFarmlandPos.below();
 
                 Item toReplace = Items.AIR;
 
                 if(!toHarvest.isAir()) {
-
-                    //break crop
-                    if (canSpecialBreak(toHarvest)) {
+                    //break special crop
+                    if (FarmTaskLogic.canSpecialBreak(toHarvest)) {
                         level.destroyBlock(this.aboveFarmlandPos, true, villager);
-                        var below = level.getBlockState(belowPos);
-                        if (below.is(Blocks.DIRT)) {
-                            level.setBlock(belowPos, Blocks.FARMLAND.defaultBlockState(), 11);
+                        BlockState below = level.getBlockState(belowPos);
+                        if (SFPlatformStuff.tillBlock(below, belowPos, level)) {
                             level.playSound(null, belowPos, SoundEvents.HOE_TILL, SoundSource.BLOCKS, 1.0F, 1.0F);
                         }
-                        if (canBreakNoReplant(toHarvest)) {
+                        if (FarmTaskLogic.canBreakNoReplant(toHarvest)) {
                             this.timeWorkedSoFar++;
-                            //dont replant pumpkins
+                            //dont replant pumpkins. exit early
                             ci.cancel();
                             return;
                         }
-                    } else if (this.canHarvest(toHarvest)) {
-                        toReplace = block.asItem();
+                        //break normal crop
+                    } else if (FarmTaskLogic.isCropMature(toHarvest)) {
+                        if(SmarterFarmers.QUARK && QuarkIntegration.breakWithAutoReplant(level, this.aboveFarmlandPos,villager)){
+                            this.timeWorkedSoFar++;
+                            //exit as auto replant did job for us
+                            ci.cancel();
+                            return;
+                        }
+                        toReplace = toHarvest.getBlock().asItem();
                         level.destroyBlock(this.aboveFarmlandPos, true, villager);
                     }
                     //if(CaveVines.hasGlowBerries(toHarvest)){
@@ -171,7 +128,7 @@ public abstract class FarmTaskMixin {
 
                 BlockState farmlandBlock = level.getBlockState(belowPos);
 
-                //check if block is empty to replant
+                //check if toHarvestBlock is empty to replant
                 if (level.getBlockState(this.aboveFarmlandPos).isAir() && canPlantOn(farmlandBlock)) {
                     SimpleContainer inventory = villager.getInventory();
 
@@ -245,11 +202,11 @@ public abstract class FarmTaskMixin {
 
                 }
 
-                if (block instanceof CropBlock cropBlock && !cropBlock.isMaxAge(toHarvest)) {
+                if (toHarvest.getBlock() instanceof CropBlock cropBlock && !cropBlock.isMaxAge(toHarvest)) {
                     this.validFarmlandAroundVillager.remove(this.aboveFarmlandPos);
                     this.aboveFarmlandPos = this.getValidFarmland(level);
                     if (this.aboveFarmlandPos != null) {
-                        this.nextOkStartTime = l + 20L;
+                        this.nextOkStartTime = tickCount + 20L;
                         villager.getBrain().setMemory(MemoryModuleType.WALK_TARGET, new WalkTarget(new BlockPosTracker(this.aboveFarmlandPos), 0.5F, 1));
                         villager.getBrain().setMemory(MemoryModuleType.LOOK_TARGET, new BlockPosTracker(this.aboveFarmlandPos));
                     }

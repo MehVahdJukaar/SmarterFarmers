@@ -30,4 +30,9 @@ public class SFPlatformStuff {
     public static boolean isValidSeed(Item i) {
         throw new AssertionError();
     }
+
+    @ExpectPlatform
+    public static boolean tillBlock(BlockState below, BlockPos belowPos, ServerLevel level) {
+        throw new AssertionError();
+    }
 }

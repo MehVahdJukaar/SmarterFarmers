@@ -14,7 +14,9 @@ dependencies {
     //implementation fileTree(dir: 'mods', include: '*.jar')
 
     modImplementation("net.mehvahdjukaar:moonlight:${project.moonlight_version}")
-    //modImplementation("curse.maven:selene-499980:3859470")
+    modImplementation("vazkii.quark:Quark:3.4-406")
+    //modCompileOnly("curse.maven:quark-243121:4587248")
+
 }
 
 publishing {

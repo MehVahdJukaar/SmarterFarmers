@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.smarterfarmers.fabric;
 
 import net.fabricmc.api.ModInitializer;
-import net.mehvahdjukaar.moonlight.fabric.FabricSetupCallbacks;
+import net.mehvahdjukaar.moonlight.fabric.MLFabricSetupCallbacks;
 import net.mehvahdjukaar.smarterfarmers.SmarterFarmers;
 
 public class SmarterFarmersFabric implements ModInitializer {
@@ -11,7 +11,7 @@ public class SmarterFarmersFabric implements ModInitializer {
 
         SmarterFarmers.commonInit();
 
-        FabricSetupCallbacks.COMMON_SETUP.add(SmarterFarmers::setup);
+        MLFabricSetupCallbacks.COMMON_SETUP.add(SmarterFarmers::setup);
 
     }
 }

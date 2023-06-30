@@ -61,14 +61,14 @@ public abstract class VillagerMixin extends AbstractVillager {
 
     @Override
     public boolean isInvulnerableTo(@NotNull DamageSource pSource) {
-        if (pSource == DamageSource.SWEET_BERRY_BUSH && isFarmer()) return true;
+        if (pSource == this.damageSources().sweetBerryBush() && isFarmer()) return true;
         return super.isInvulnerableTo(pSource);
     }
 
     @Inject(method = "handleEntityEvent", at = @At(value = "HEAD"))
     public void handleEntityEvent(byte pId, CallbackInfo ci) {
         if (pId == EntityEvent.FOX_EAT) { //using this one
-            if (this.level.isClientSide) {
+            if (this.level().isClientSide) {
                 //copied from haunted harvest
                 SmarterFarmers.spawnEatingParticles(this);
             }

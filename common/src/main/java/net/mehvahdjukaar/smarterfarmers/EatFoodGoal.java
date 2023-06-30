@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.smarterfarmers.goal;
+package net.mehvahdjukaar.smarterfarmers;
 
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.server.level.ServerLevel;
