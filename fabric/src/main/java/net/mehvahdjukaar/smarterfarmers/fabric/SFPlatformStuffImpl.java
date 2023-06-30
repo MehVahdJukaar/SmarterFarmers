@@ -45,7 +45,7 @@ public class SFPlatformStuffImpl {
             Block b = blockItem.getBlock();
             return (b instanceof CropBlock || b.defaultBlockState().is(BlockTags.CROPS));
         }
-        return i.builtInRegistryHolder().is(ItemTags.VILLAGER_PLANTABLE_SEEDS);
+        return i.getDefaultInstance().is(ItemTags.VILLAGER_PLANTABLE_SEEDS);
     }
 
     public static boolean tillBlock(BlockState state, BlockPos belowPos, ServerLevel level) {

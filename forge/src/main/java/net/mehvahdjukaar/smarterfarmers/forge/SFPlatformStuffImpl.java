@@ -5,7 +5,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.ai.behavior.HarvestFarmland;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -17,7 +16,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.PlantType;
-import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.common.ToolActions;
 import org.jetbrains.annotations.Nullable;
 
@@ -51,7 +49,7 @@ public class SFPlatformStuffImpl {
             Block b = blockItem.getBlock();
             return (b instanceof IPlantable pl && !(b instanceof StemBlock));
         }
-        return i.builtInRegistryHolder().is(ItemTags.VILLAGER_PLANTABLE_SEEDS);
+        return i.getDefaultInstance().is(ItemTags.VILLAGER_PLANTABLE_SEEDS);
     }
 
     public static boolean tillBlock(BlockState state, BlockPos belowPos, ServerLevel level) {
