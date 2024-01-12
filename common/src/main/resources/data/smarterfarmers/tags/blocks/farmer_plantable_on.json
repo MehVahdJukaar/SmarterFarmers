@@ -6,6 +6,6 @@
     {"id":"immersive_weathering:mulch","required":false},
     {"id":"supplementaries:planter","required":false},
     {"id":"supplementaries:rich_soil_planter","required":false},
-    {"id":"farmers_delight:rich_soil","required":false}
+    {"id":"farmers_delight:rich_soil_farmland","required":false}
   ]
 }

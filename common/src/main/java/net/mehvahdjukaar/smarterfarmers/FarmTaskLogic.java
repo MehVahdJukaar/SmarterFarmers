@@ -56,9 +56,12 @@ public class FarmTaskLogic {
         return state.is(SmarterFarmers.NO_REPLANT);
     }
 
+    public static boolean isValidFarmland(Block block) {
+        return block instanceof FarmBlock || block.builtInRegistryHolder().is(SmarterFarmers.VALID_FARMLAND);
+    }
+
     public static boolean isValidFarmland(BlockState state) {
-        return state.getBlock() instanceof FarmBlock ||
-                state.is(SmarterFarmers.VALID_FARMLAND);
+        return isValidFarmland(state.getBlock());
     }
 
 }

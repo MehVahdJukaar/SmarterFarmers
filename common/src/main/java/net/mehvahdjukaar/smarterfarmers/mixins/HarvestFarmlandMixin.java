@@ -81,7 +81,7 @@ public abstract class HarvestFarmlandMixin {
     //TODO:  redo from scratch (?)
 
     /**
-     * Basically an overwrite. Not using that cause of fabric api mixins
+     * Basically overwriting. Not using that cause of fabric api mixins
      *
      * @author MehVahdJukaar
      * @reason Smarter Farmers Mod, overhauled farm task logic

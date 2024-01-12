@@ -11,12 +11,16 @@ dependencies {
     // Do NOT use other classes from fabric loader
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
 
-    //implementation fileTree(dir: 'mods', include: '*.jar')
+    annotationProcessor("com.github.LlamaLad7:MixinExtras:${mixin_extras_version}")
+    implementation("com.github.LlamaLad7:MixinExtras:${mixin_extras_version}")
+    annotationProcessor 'net.fabricmc:sponge-mixin:0.12.5+mixin.0.8.5'
 
     modImplementation("net.mehvahdjukaar:moonlight:${project.moonlight_version}")
     //modCompileOnly("curse.maven:quark-243121:4587248")
     modCompileOnly("org.violetmoon.quark:Quark-4.0-beta-426")
     modCompileOnly("org.violetmoon.zeta:Zeta-1.0-beta-1")
+
+
 }
 
 publishing {
