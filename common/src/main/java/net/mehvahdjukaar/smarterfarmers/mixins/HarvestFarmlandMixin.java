@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.smarterfarmers.mixins;
 
 
+import net.mehvahdjukaar.moonlight.core.Moonlight;
 import net.mehvahdjukaar.smarterfarmers.CountOrderedSortedMap;
 import net.mehvahdjukaar.smarterfarmers.FarmTaskLogic;
 import net.mehvahdjukaar.smarterfarmers.SFPlatformStuff;
@@ -31,7 +32,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.*;
 
-@Mixin(value = {HarvestFarmland.class}, priority = 500)
+@Mixin(value = {HarvestFarmland.class}, priority = 1200)
 public abstract class HarvestFarmlandMixin {
 
 

@@ -5,9 +5,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
-import vazkii.quark.content.tweaks.module.SimpleHarvestModule;
+import org.violetmoon.quark.content.tweaks.module.SimpleHarvestModule;
 
 public class QuarkIntegration {
 
