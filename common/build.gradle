@@ -1,26 +1,23 @@
 architectury {
-    common(rootProject.enabled_platforms.split(","))
+    common(enabled_platforms.split(",")){
+        it.platformPackage("neoforge", "forge")
+    }
 }
-
 loom {
-    accessWidenerPath = file("src/main/resources/smarterfarmers.accesswidener")
+    accessWidenerPath = file("src/main/resources/${mod_id}.accesswidener")
 }
 
 dependencies {
     // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
     // Do NOT use other classes from fabric loader
-    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
 
-    annotationProcessor("com.github.LlamaLad7:MixinExtras:${mixin_extras_version}")
-    implementation("com.github.LlamaLad7:MixinExtras:${mixin_extras_version}")
     annotationProcessor 'net.fabricmc:sponge-mixin:0.12.5+mixin.0.8.5'
 
-    modImplementation("net.mehvahdjukaar:moonlight:${project.moonlight_version}")
-    //modCompileOnly("curse.maven:quark-243121:4587248")
+    modImplementation ("net.mehvahdjukaar:moonlight:${moonlight_version}")
+
     modCompileOnly("org.violetmoon.quark:Quark-4.0-beta-431")
     modCompileOnly("org.violetmoon.zeta:Zeta-1.0-beta-1")
-
-
 }
 
 publishing {

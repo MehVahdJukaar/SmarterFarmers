@@ -14,6 +14,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.schedule.Activity;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -45,9 +46,8 @@ public class SmarterFarmers {
 
 
     public static void commonInit() {
-
         MoonlightEventsHelper.addListener(SmarterFarmers::onVillagerBrainInitialize, IVillagerBrainEvent.class);
-
+        PlatHelper.addCommonSetup(SmarterFarmers::setup);
     }
 
     public static void setup() {
@@ -60,7 +60,10 @@ public class SmarterFarmers {
                         i.builtInRegistryHolder().is(MEAT)
                         //ignore container items
                         && !(i instanceof BowlFoodItem) && !(i instanceof HoneyBottleItem)) {
-                    newMap.put(i, (int) Math.max(1, i.getFoodProperties().getNutrition() * 2 / 3f));
+                    FoodProperties foodProperties = i.getFoodProperties();
+                    if (foodProperties != null) {
+                        newMap.put(i, (int) Math.max(1, foodProperties.getNutrition() * 2 / 3f));
+                    }
                 }
             }
             Villager.FOOD_POINTS = newMap;

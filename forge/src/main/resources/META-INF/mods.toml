@@ -1,47 +1,44 @@
 
-modLoader="javafml" #mandatory
+modLoader = "javafml"
+loaderVersion = "*"
 
-loaderVersion="[40,)" #mandatory This is typically bumped every Minecraft version by Forge. See our download page for lists of versions.
+license = "${mod_license}"
+issueTrackerURL = "${mod_github}/issues"
 
-license="All rights reserved"
+[[mixins]]
+config = "${mod_id}.mixins.json"
+[[mixins]]
+config = "${mod_id}-common.mixins.json"
 
-[[mods]] #mandatory
+[[mods]]
+modId = "${mod_id}"
+version = "${mod_version}"
+displayName = "${mod_name}"
+logoFile = "icon.png"
+authors = "${mod_authors}"
+credits = "${mod_credits}"
+description = '''${mod_description}'''
+modUrl = "${mod_homepage}"
+itemIcon="minecraft:painting" #catalogue icon
 
-modId="smarterfarmers" #mandatory
+[[dependencies.${mod_id}]]
+modId = "neoforge"
+type = "REQUIRED"
+versionRange = "${forge_version_range}"
+ordering = "NONE"
+side = "BOTH"
 
-version = "${version}"
+[[dependencies.${mod_id}]]
+modId = "minecraft"
+type = "REQUIRED"
+versionRange = "[${minecraft_min_version},${minecraft_max_version})"
+ordering = "NONE"
+side = "BOTH"
 
-displayName="Smarter Farmers" #mandatory
 
-logoFile="icon.png" #optional
-
-credits="MehVahdJukaar" #optional
-
-authors="MehVahdJukaar" #optional
-
-itemIcon="minecraft:carrot" #catalogue icon
-description='''
-Makes Farmer Villagers smarter!
-'''
-
-[[dependencies.smarterfarmers]]
-    modId="forge"
-    mandatory=true
-    versionRange="[44,)"
-    ordering="NONE"
-    side="BOTH"
-
-[[dependencies.smarterfarmers]]
-    modId="minecraft"
-    mandatory=true
-    versionRange="[1.20,1.21)"
-    ordering="NONE"
-    side="BOTH"
-
-[[dependencies.smarterfarmers]]
-
-    modId="moonlight"
-    mandatory=true
-    versionRange="[1.20-2.5.0,]"
-    ordering="NONE"
-    side="BOTH"
+[[dependencies.${mod_id}]]
+modId = "moonlight"
+type = "REQUIRED"
+versionRange = "*"
+ordering = "NONE"
+side = "BOTH"
