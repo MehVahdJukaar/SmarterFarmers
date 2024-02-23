@@ -1,6 +1,10 @@
 package net.mehvahdjukaar.smarterfarmers.forge;
 
 import net.mehvahdjukaar.smarterfarmers.SmarterFarmers;
+import net.minecraft.world.entity.npc.Villager;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.EntityMobGriefingEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.IExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -24,6 +28,8 @@ public class SmarterFarmersForge {
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(SmarterFarmersForge::setup);
 
+
+        MinecraftForge.EVENT_BUS.register(this);
     }
 
 
@@ -32,5 +38,11 @@ public class SmarterFarmersForge {
     }
 
 
+    @SubscribeEvent
+    public void mobGriefing(EntityMobGriefingEvent event) {
+        if(event.getEntity() instanceof Villager && SmarterFarmers.PICKUP_FOOD.get()){
+            event.setResult(EntityMobGriefingEvent.Result.ALLOW);
+        }
+    }
 }
 

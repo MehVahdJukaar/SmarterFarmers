@@ -1,1 +1,1 @@
-added config to make villagers always pickup food regardless of gamerule
+fixed crash on forge. using forge event for new feature

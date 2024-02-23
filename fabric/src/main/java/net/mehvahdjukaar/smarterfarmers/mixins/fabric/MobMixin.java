@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.smarterfarmers.mixins;
+package net.mehvahdjukaar.smarterfarmers.mixins.fabric;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;

@@ -20,23 +20,21 @@ configurations {
 }
 
 dependencies {
-    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
-    modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
-    // Remove the next line if you don't want to depend on the API
-    //modApi "dev.architectury:architectury-fabric:${rootProject.architectury_version}"
+    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    modApi "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
 
-    modImplementation("curse.maven:yacl-667299:3987709")
+    modCompileOnly("curse.maven:yacl-667299:3987709")
 
-    modImplementation("curse.maven:modmenu-308702:3920481") {
+    modCompileOnly("curse.maven:modmenu-308702:3920481") {
         exclude module: "fabric-api"
     }
     include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:${mixin_extras_version}")))
     annotationProcessor 'net.fabricmc:sponge-mixin:0.12.5+mixin.0.8.5'
 
-    modImplementation("curse.maven:farmers-delight-fabric-482834:4104108")
+    modCompileOnly("curse.maven:farmers-delight-fabric-482834:4104108")
 
     modImplementation ("net.mehvahdjukaar:moonlight-fabric:${project.moonlight_version}")
 }
