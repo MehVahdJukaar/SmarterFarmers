@@ -4,6 +4,8 @@ import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.moonlight.api.events.IVillagerBrainEvent;
 import net.mehvahdjukaar.moonlight.api.events.MoonlightEventsHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder;
+import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -23,6 +25,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * Author: MehVahdJukaar
@@ -43,6 +46,22 @@ public class SmarterFarmers {
     public static final TagKey<Block> VALID_FARMLAND = TagKey.create(Registries.BLOCK, new ResourceLocation(MOD_ID, "farmer_plantable_on"));
     public static final TagKey<Item> MEAT = TagKey.create(Registries.ITEM, new ResourceLocation("forge", "food/meat"));
 
+    public static final Supplier<Boolean> PICKUP_FOOD;
+    public static final Supplier<Boolean> EAT_FOOD;
+
+    static{
+        ConfigBuilder builder = ConfigBuilder.create(MOD_ID, ConfigType.COMMON);
+
+        builder.push("general");
+        PICKUP_FOOD = builder.comment("If true, villagers will pick up food items from the regardless of mob griefing gamerule. Needed since with mob griefing on they wont be able to breed.")
+                .define("pickup_food_override", true);
+        EAT_FOOD = builder.comment("If true, villagers will eat food items they pick up. Eating food will heal them")
+                .define("eat_food", true);
+
+        builder.pop();
+
+        builder.buildAndRegister();
+    }
 
     public static void commonInit() {
 
@@ -72,7 +91,8 @@ public class SmarterFarmers {
 
     public static void onVillagerBrainInitialize(IVillagerBrainEvent event) {
         //babies do not eat
-        if (!event.getVillager().isBaby()) {
+        // this also mean they will need a reload after they grown up...
+        if (!event.getVillager().isBaby() && EAT_FOOD.get()) {
             event.addTaskToActivity(Activity.MEET, Pair.of(7, new EatFoodGoal(100, 140)));
         }
     }
