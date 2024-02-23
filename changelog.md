@@ -1,1 +1,1 @@
-updated quark dep
+added config to make villagers always pickup food regardless of gamerule
