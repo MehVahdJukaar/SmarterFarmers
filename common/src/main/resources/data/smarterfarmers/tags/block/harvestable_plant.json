@@ -1,7 +1,7 @@
 {
   "replace": false,
   "values": [
-    "minecraft:grass",
+    "minecraft:short_grass",
     "minecraft:fern",
     {"id":"immersive_weathering:weeds","required":false},
     {"id":"heftycrops:hefty_beetroot","required":false},
