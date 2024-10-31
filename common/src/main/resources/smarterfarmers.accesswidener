@@ -2,3 +2,4 @@ accessWidener   v2  named
 
 accessible field net/minecraft/world/entity/ai/behavior/WorkAtComposter COMPOSTABLE_ITEMS Ljava/util/List;
 mutable field net/minecraft/world/entity/ai/behavior/WorkAtComposter COMPOSTABLE_ITEMS Ljava/util/List;
+

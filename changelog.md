@@ -1,1 +1,1 @@
-fixed villagers food list not being populated correctly
+fixed farmer poi sensor affecting villagers fromother mods which had a secondary job site
