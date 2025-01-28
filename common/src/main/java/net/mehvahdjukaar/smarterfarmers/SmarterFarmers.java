@@ -9,6 +9,7 @@ import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ModConfigHolder;
 import net.mehvahdjukaar.smarterfarmers.mixins.VillagerAccessor;
+import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ItemParticleOption;
@@ -55,14 +56,18 @@ public class SmarterFarmers {
     public static final TagKey<Block> VALID_FARMLAND = TagKey.create(Registries.BLOCK, res("farmer_plantable_on"));
     public static final TagKey<Block> FARMLAND_DIRT = TagKey.create(Registries.BLOCK, res("farmland_dirt"));
     public static final TagKey<Item> EAT_BLACKLIST = TagKey.create(Registries.ITEM, res("villagers_cant_eat"));
+    public static final TagKey<Item> STEM_SEEDS = TagKey.create(Registries.ITEM, res("stem_seeds"));
+    public static final TagKey<Block> FARMER_TILLABLE = TagKey.create(Registries.BLOCK, res("farmer_tillable"));
 
     public static final Supplier<Boolean> PICKUP_FOOD;
     public static final Supplier<Boolean> EAT_FOOD;
     public static final Supplier<Boolean> DEBUG_RENDERERS;
+    public static final Supplier<Boolean> PLANT_ON_DIRT;
     public static final Supplier<Integer> TIME_TO_HARVEST;
 
     public static final ModConfigHolder CONFIG;
 
+    //TODO: make them harvest pumpkins and melons
     static {
         ConfigBuilder builder = ConfigBuilder.create(MOD_ID, ConfigType.COMMON);
 
@@ -76,7 +81,8 @@ public class SmarterFarmers {
         DEBUG_RENDERERS = PlatHelper.isDev() ? () -> true :
                 builder.comment("If true, will render debug info for farmers. Only works in single player")
                         .define("debug_renderer", false);
-
+        PLANT_ON_DIRT = builder.comment("If true, farmers will plant crops on dirt blocks by tilling them")
+                .define("plant_on_dirt", false);
         builder.pop();
 
         CONFIG = builder.build();

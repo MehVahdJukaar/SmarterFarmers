@@ -1,6 +1,8 @@
 {
   "values": [
     {"id":"farmersdelight:cabbage_seeds","required":false},
-    {"id":"farmersdelight:tomato_seeds","required":false}
+    {"id":"farmersdelight:tomato_seeds","required":false},
+    {"id":"minecraft:pumpkin_seeds","required":false},
+    {"id":"minecraft:melon_seeds","required":false}
   ]
 }

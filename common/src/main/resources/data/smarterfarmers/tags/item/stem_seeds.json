@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    {"id":"minecraft:melon_seeds","required":true},
+    {"id":"minecraft:pumpkin_seeds","required":true}
+  ]
+}

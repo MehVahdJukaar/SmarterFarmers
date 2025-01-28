@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.misc.FrequencyOrderedCollection;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.smarterfarmers.integration.QuarkIntegration;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -15,17 +16,14 @@ import net.minecraft.world.entity.ai.behavior.BlockPosTracker;
 import net.minecraft.world.entity.ai.behavior.HarvestFarmland;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.WalkTarget;
-import net.minecraft.world.entity.ai.village.poi.PoiTypes;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.VillagerProfession;
-import net.minecraft.world.entity.npc.VillagerType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameRules;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.StemBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import org.jetbrains.annotations.Nullable;
@@ -119,12 +117,17 @@ public class SFHarvestFarmland extends HarvestFarmland {
         FrequencyOrderedCollection<Item> blockAsItemAround = new FrequencyOrderedCollection<>();
         BlockPos.MutableBlockPos mutableBlockPos = targetPos.mutable();
 
+        boolean hasAirInNeighbor = false;
         for (int x = -1; x <= 1; ++x) {
             for (int y = -1; y <= 1; ++y) {
                 for (int z = -1; z <= 1; ++z) {
                     if (x == 0 && z == 0) continue;
                     mutableBlockPos.set(targetPos.getX() + x, targetPos.getY() + y, targetPos.getZ() + z);
                     BlockState blockState = level.getBlockState(mutableBlockPos);
+                    if (!hasAirInNeighbor && y == 0 && Math.abs(x) + Math.abs(z) == 1) {
+                        hasAirInNeighbor = blockState.isAir();
+                    }
+
                     Item item = blockState.getBlock().asItem();
                     if (item != Items.AIR) blockAsItemAround.add(item);
                 }
@@ -147,12 +150,18 @@ public class SFHarvestFarmland extends HarvestFarmland {
 
         if (availableSeeds.isEmpty()) return ItemStack.EMPTY;
 
+        boolean failedForMelon = false;
         // filter
         for (Item item : blockAsItemAround) {
             if (availableSeeds.contains(item)) {
+                if (item.getDefaultInstance().is(SmarterFarmers.STEM_SEEDS) && (targetPos.getX() + targetPos.getZ()) % 2 == 0) {
+                    failedForMelon = true;
+                    continue;
+                }
                 return villagerSeedsInInventory.get(item);
             }
         }
+        if (failedForMelon) return ItemStack.EMPTY;
         return villagerSeedsInInventory.get(availableSeeds.iterator().next());
     }
 
@@ -197,7 +206,7 @@ public class SFHarvestFarmland extends HarvestFarmland {
                 return Action.HARVEST_AND_REPLANT;
             }
             if (cropState.isAir()) {
-                return Action.PLANT;
+                return Action.plantIfNoMelonsAround(pos, level);
             }
         }
         if (cropState.is(SmarterFarmers.HARVESTABLE_ON_DIRT_NO_REPLANT) &&
@@ -206,6 +215,9 @@ public class SFHarvestFarmland extends HarvestFarmland {
         } else if (cropState.is(SmarterFarmers.HARVESTABLE_ON_DIRT) &&
                 farmState.is(SmarterFarmers.FARMLAND_DIRT)) {
             return Action.HARVEST_AND_REPLANT;
+        } else if (cropState.isAir() && true &&
+                farmState.is(SmarterFarmers.FARMER_TILLABLE)) {
+            return Action.plantIfNoMelonsAround(pos, level);
         }
         return null;
     }
@@ -268,8 +280,16 @@ public class SFHarvestFarmland extends HarvestFarmland {
         targetState = level.getBlockState(this.aboveFarmlandPos);
 
         //check if toHarvestBlock is empty to replant
-        if (targetState.isAir() && FarmTaskLogic.isValidFarmland(farmlandBlock.getBlock())) {
-            replant(level, villager, toReplace);
+        if (targetState.isAir()) {
+            if (FarmTaskLogic.isValidFarmland(farmlandBlock.getBlock())) {
+                replant(level, villager, toReplace);
+            } else if (farmlandBlock.is(SmarterFarmers.FARMER_TILLABLE)) {
+                //till and replant
+                if (SFPlatformStuff.tillBlock(farmlandBlock, belowPos, level)) {
+                    level.playSound(null, belowPos, SoundEvents.HOE_TILL, SoundSource.BLOCKS, 1.0F, 1.0F);
+                    replant(level, villager, toReplace);
+                }
+            }
         }
 
         // if we reach here, wether we failed or not, we recalculate a new target
@@ -337,6 +357,28 @@ public class SFHarvestFarmland extends HarvestFarmland {
         HARVEST,
         HARVEST_AND_REPLANT,
         PLANT;
+
+        public static @Nullable Action plantIfNoMelonsAround(BlockPos pos, ServerLevel level) {
+            // check all 4 neighbors by iterating directions. IF one of them is a melon or pumpkin stem check ITS 3 neighbors. If all of those are NON air, return null
+            for (Direction dir : Direction.Plane.HORIZONTAL) {
+                BlockPos neighbor = pos.relative(dir);
+                BlockState neighborState = level.getBlockState(neighbor);
+                if (neighborState.getBlock() instanceof StemBlock) {
+                    boolean hasOtherSpace = false;
+                    for (Direction dir2 : Direction.Plane.HORIZONTAL) {
+                        if (dir2 == dir.getOpposite()) continue;
+                        BlockPos neighbor2 = neighbor.relative(dir2);
+                        if (level.getBlockState(neighbor2).isAir()) {
+                            hasOtherSpace = true;
+                            break;
+                        }
+                    }
+                    if (!hasOtherSpace) return null;
+                }
+            }
+
+            return PLANT;
+        }
 
         public boolean harvests() {
             return this == HARVEST || this == HARVEST_AND_REPLANT;
