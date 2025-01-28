@@ -1,6 +1,1 @@
-- villagers can now place melons and pumpins
-- note they still cant convert their drops into seeds or food
-- melon and pumpkis will be placed in a checkerboard pattern.
-- villagers will no longer place seeds next to a melon stem that has nowhere else to grow
-- added a tag for blocks villagers can till
-- on fabric villagers will no longer trample farmland
+- fixed wrong config value for newly added plant on dirt feature

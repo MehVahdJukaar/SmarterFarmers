@@ -81,7 +81,7 @@ public class SmarterFarmers {
         DEBUG_RENDERERS = PlatHelper.isDev() ? () -> true :
                 builder.comment("If true, will render debug info for farmers. Only works in single player")
                         .define("debug_renderer", false);
-        PLANT_ON_DIRT = builder.comment("If true, farmers will plant crops on dirt blocks by tilling them")
+        PLANT_ON_DIRT = builder.comment("If true, farmers will plant crops on dirt blocks by tilling them. Valid blocks are controlled by farmer_tillable tag")
                 .define("plant_on_dirt", false);
         builder.pop();
 

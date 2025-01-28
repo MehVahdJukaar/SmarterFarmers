@@ -215,7 +215,7 @@ public class SFHarvestFarmland extends HarvestFarmland {
         } else if (cropState.is(SmarterFarmers.HARVESTABLE_ON_DIRT) &&
                 farmState.is(SmarterFarmers.FARMLAND_DIRT)) {
             return Action.HARVEST_AND_REPLANT;
-        } else if (cropState.isAir() && true &&
+        } else if (cropState.isAir() && SmarterFarmers.PLANT_ON_DIRT.get() &&
                 farmState.is(SmarterFarmers.FARMER_TILLABLE)) {
             return Action.plantIfNoMelonsAround(pos, level);
         }
