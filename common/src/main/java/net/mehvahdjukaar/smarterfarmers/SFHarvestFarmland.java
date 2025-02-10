@@ -26,6 +26,7 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.StemBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.VisibleForTesting;
 
@@ -210,10 +211,10 @@ public class SFHarvestFarmland extends HarvestFarmland {
             }
         }
         if (cropState.is(SmarterFarmers.HARVESTABLE_ON_DIRT_NO_REPLANT) &&
-                farmState.is(SmarterFarmers.FARMLAND_DIRT)) {
+                farmState.is(SmarterFarmers.FARMER_TILLABLE)) {
             return Action.HARVEST;
         } else if (cropState.is(SmarterFarmers.HARVESTABLE_ON_DIRT) &&
-                farmState.is(SmarterFarmers.FARMLAND_DIRT)) {
+                farmState.is(SmarterFarmers.FARMER_TILLABLE)) {
             return Action.HARVEST_AND_REPLANT;
         } else if (cropState.isAir() && SmarterFarmers.PLANT_ON_DIRT.get() &&
                 farmState.is(SmarterFarmers.FARMER_TILLABLE)) {
@@ -299,17 +300,17 @@ public class SFHarvestFarmland extends HarvestFarmland {
 
     private void replant(ServerLevel level, Villager villager, Item toReplace) {
         // first try to replant.
-        ItemStack itemToPlant = null;
+        ItemStack itemToPlant = ItemStack.EMPTY;
         if (toReplace != Items.AIR) {
             itemToPlant = findSameItem(villager.getInventory(), toReplace);
         }
         // if we cant replant, or we are planting a new, recompute seed to plant anyways
         // seedToHold is just visual. Most time it should match whats actually planted
-        if (itemToPlant == null) {
+        if (itemToPlant.isEmpty()) {
             itemToPlant = getSeedToPlantAt(this.aboveFarmlandPos, level, villager);
         }
 
-        if (itemToPlant != null) {
+        if (!itemToPlant.isEmpty()) {
 
             boolean success = false;
             if (SFPlatformStuff.trySpecialPlant(level, this.aboveFarmlandPos, itemToPlant, villager)) {
@@ -334,7 +335,7 @@ public class SFHarvestFarmland extends HarvestFarmland {
         }
     }
 
-    @Nullable
+    @NotNull
     private ItemStack findSameItem(SimpleContainer inventory, Item toReplace) {
         if (toReplace != Items.AIR && toReplace instanceof BlockItem) {
             for (int i = 0; i < inventory.getContainerSize(); ++i) {
@@ -344,7 +345,7 @@ public class SFHarvestFarmland extends HarvestFarmland {
                 }
             }
         }
-        return null;
+        return ItemStack.EMPTY;
     }
 
 

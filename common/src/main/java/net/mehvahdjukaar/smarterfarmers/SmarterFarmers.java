@@ -54,7 +54,6 @@ public class SmarterFarmers {
     public static final TagKey<Block> HARVESTABLE_ON_DIRT_NO_REPLANT = TagKey.create(Registries.BLOCK, res("harvestable_on_dirt_no_replant"));
     public static final TagKey<Block> HARVESTABLE_ON_DIRT = TagKey.create(Registries.BLOCK, res("harvestable_on_dirt"));
     public static final TagKey<Block> VALID_FARMLAND = TagKey.create(Registries.BLOCK, res("farmer_plantable_on"));
-    public static final TagKey<Block> FARMLAND_DIRT = TagKey.create(Registries.BLOCK, res("farmland_dirt"));
     public static final TagKey<Item> EAT_BLACKLIST = TagKey.create(Registries.ITEM, res("villagers_cant_eat"));
     public static final TagKey<Item> STEM_SEEDS = TagKey.create(Registries.ITEM, res("stem_seeds"));
     public static final TagKey<Block> FARMER_TILLABLE = TagKey.create(Registries.BLOCK, res("farmer_tillable"));

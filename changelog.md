@@ -1,1 +1,1 @@
-- fixed wrong config value for newly added plant on dirt feature
+fixed replanting on some particular mod crops logigng errors
