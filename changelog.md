@@ -1,1 +1,1 @@
-improved crop harvesting logic. added 1 new related tag
+fixed an issue with empty items

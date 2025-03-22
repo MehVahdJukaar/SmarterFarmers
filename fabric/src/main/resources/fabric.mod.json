@@ -11,7 +11,7 @@
     "homepage": "https://www.curseforge.com/minecraft/mc-mods/smarterfarmers",
     "sources": "https://github.com/MehVahdJukaar/smarterfarmers"
   },
-  "license": "ARR",
+  "license": "Supplementaries Team License v1.2",
   "icon": "icon.png",
   "environment": "*",
   "entrypoints": {

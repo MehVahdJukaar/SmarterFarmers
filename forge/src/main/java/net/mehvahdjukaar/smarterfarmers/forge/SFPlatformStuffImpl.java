@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.smarterfarmers.forge;
 
-import net.mehvahdjukaar.hauntedharvest.blocks.CornBaseBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -40,8 +39,8 @@ public class SFPlatformStuffImpl {
     }
 
     public static BlockState getPlant(ServerLevel world, BlockPos pos, ItemStack itemStack) {
-        if(itemStack.getItem() instanceof BlockItem blockItem){
-            if(blockItem.getBlock() instanceof IPlantable ip){
+        if (itemStack.getItem() instanceof BlockItem blockItem) {
+            if (blockItem.getBlock() instanceof IPlantable ip) {
                 return ip.getPlant(world, pos);
             }
             return blockItem.getBlock().defaultBlockState();
@@ -63,7 +62,7 @@ public class SFPlatformStuffImpl {
                 Items.IRON_HOE.getDefaultInstance(),
                 new BlockHitResult(belowPos.getCenter(), Direction.UP, belowPos, false));
         BlockState newState = state.getToolModifiedState(c, ToolActions.HOE_TILL, false);
-        if(newState != null && newState != state){
+        if (newState != null && newState != state) {
             level.setBlock(belowPos, newState, 11);
             return true;
         }

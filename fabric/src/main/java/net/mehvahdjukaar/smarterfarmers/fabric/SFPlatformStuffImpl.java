@@ -38,7 +38,7 @@ public class SFPlatformStuffImpl {
 
     @Nullable
     public static BlockState getPlant(ServerLevel world, BlockPos pos, ItemStack itemStack) {
-        if(itemStack.getItem() instanceof BlockItem blockItem){
+        if (itemStack.getItem() instanceof BlockItem blockItem) {
             return blockItem.getBlock().defaultBlockState();
         }
         return null;
