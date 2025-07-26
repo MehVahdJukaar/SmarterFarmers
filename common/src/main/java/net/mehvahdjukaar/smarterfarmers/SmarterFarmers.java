@@ -104,11 +104,12 @@ public class SmarterFarmers {
             Map<Item, Integer> newMap = new HashMap<>(OLD_FOOD_POINTS);
 
             for (Item i : BuiltInRegistries.ITEM) {
-                FoodProperties foodProperties = i.components().get(DataComponents.FOOD);
+                ItemStack defaultStack = i.getDefaultInstance();
+                FoodProperties foodProperties = defaultStack.get(DataComponents.FOOD);
                 if (foodProperties != null &&
-                        i.components().getOrDefault(DataComponents.RARITY, Rarity.COMMON) == Rarity.COMMON
+                        defaultStack.getOrDefault(DataComponents.RARITY, Rarity.COMMON) == Rarity.COMMON
                         // villagers are vegetarian!
-                        && !i.builtInRegistryHolder().is(EAT_BLACKLIST)
+                        && !defaultStack.is(EAT_BLACKLIST)
                         && foodProperties.effects().stream().allMatch(e ->
                             e.effect().getEffect().value().isBeneficial()
                         )
@@ -120,7 +121,7 @@ public class SmarterFarmers {
             }
             VillagerAccessor.setFoodPoints(newMap);
         } catch (Exception e) {
-            LOGGER.warn("Failed to add custom foods to villagers");
+            LOGGER.warn("Failed to add custom foods to villagers", e);
         }
     }
 

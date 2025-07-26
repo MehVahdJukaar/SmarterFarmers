@@ -1,1 +1,1 @@
-fixed replanting on some particular mod crops logigng errors
+added better exception handling
