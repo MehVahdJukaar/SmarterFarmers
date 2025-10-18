@@ -58,8 +58,8 @@ public class FarmTaskLogic {
         return state.hasProperty(property) && state.getValue(property) == max;
     }
 
-    public static boolean isValidFarmland(Block block) {
-        return block instanceof FarmBlock || block.builtInRegistryHolder().is(SmarterFarmers.VALID_FARMLAND);
+    public static boolean isFarmland(BlockState block) {
+        return block.getBlock() instanceof FarmBlock || block.is(SmarterFarmers.VALID_FARMLAND);
     }
 
 }

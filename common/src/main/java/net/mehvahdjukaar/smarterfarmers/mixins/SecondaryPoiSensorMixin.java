@@ -20,7 +20,7 @@ public class SecondaryPoiSensorMixin {
     public boolean smarterfarmers$addMoreFarmland(ImmutableSet<Block> instance, Object o, Operation<Boolean> original,
                                                   @Local(argsOnly = true) Villager villager) {
         if (villager.getVillagerData().getProfession() == VillagerProfession.FARMER) {
-            return original.call(instance, o) || FarmTaskLogic.isValidFarmland(((Block) o));
+            return original.call(instance, o) || FarmTaskLogic.isFarmland(((Block) o).defaultBlockState());
         } else {
 
             return original.call(instance, o);

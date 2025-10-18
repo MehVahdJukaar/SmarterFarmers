@@ -201,8 +201,8 @@ public class SFHarvestFarmland extends HarvestFarmland {
     protected Action getActionForPos(BlockPos pos, ServerLevel level) {
         BlockState cropState = level.getBlockState(pos);
         BlockState farmState = level.getBlockState(pos.below());
-        boolean validFarmland = FarmTaskLogic.isValidFarmland(farmState.getBlock());
-        if (validFarmland) {
+        //if farmland below
+        if (FarmTaskLogic.isFarmland(farmState)) {
             if (FarmTaskLogic.isCropMature(cropState, pos, level)) {
                 return Action.HARVEST_AND_REPLANT;
             }
@@ -210,15 +210,15 @@ public class SFHarvestFarmland extends HarvestFarmland {
                 return Action.plantIfNoMelonsAround(pos, level);
             }
         }
-        if (cropState.is(SmarterFarmers.HARVEST_ON_TILLABLE_NO_REPLANT) &&
-                farmState.is(SmarterFarmers.FARMER_TILLABLE)) {
-            return Action.HARVEST;
-        } else if (cropState.is(SmarterFarmers.HARVEST_ON_TILLABLE) &&
-                farmState.is(SmarterFarmers.FARMER_TILLABLE)) {
-            return Action.HARVEST_AND_REPLANT;
-        } else if (cropState.isAir() && SmarterFarmers.PLANT_ON_DIRT.get() &&
-                farmState.is(SmarterFarmers.FARMER_TILLABLE)) {
-            return Action.plantIfNoMelonsAround(pos, level);
+        //if tillable below
+        if (farmState.is(SmarterFarmers.FARMER_TILLABLE)) {
+            if (cropState.is(SmarterFarmers.HARVEST_ON_TILLABLE_NO_REPLANT)) {
+                return Action.HARVEST;
+            } else if (cropState.is(SmarterFarmers.HARVEST_ON_TILLABLE)) {
+                return Action.HARVEST_AND_REPLANT;
+            } else if (cropState.isAir() && SmarterFarmers.PLANT_ON_DIRT.get()) {
+                return Action.plantIfNoMelonsAround(pos, level);
+            }
         }
         return null;
     }
@@ -282,7 +282,7 @@ public class SFHarvestFarmland extends HarvestFarmland {
 
         //check if toHarvestBlock is empty to replant
         if (targetState.isAir()) {
-            if (FarmTaskLogic.isValidFarmland(farmlandBlock.getBlock())) {
+            if (FarmTaskLogic.isFarmland(farmlandBlock)) {
                 replant(level, villager, toReplace);
             } else if (farmlandBlock.is(SmarterFarmers.FARMER_TILLABLE)) {
                 //till and replant
