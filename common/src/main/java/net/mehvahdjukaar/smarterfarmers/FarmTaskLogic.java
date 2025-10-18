@@ -34,7 +34,7 @@ public class FarmTaskLogic {
         if (b instanceof IBeeGrowable bg) {
             return bg.isPlantFullyGrown(state, pos, level);
         }
-        if (state.is(SmarterFarmers.SPECIAL_HARVESTABLE)) return true;
+        if (state.is(SmarterFarmers.HARVEST_ON_FARMLAND_SPECIAL)) return true;
 
         if (b instanceof CropBlock crop) {
             return crop.isMaxAge(state);

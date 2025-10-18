@@ -29,7 +29,7 @@ public abstract class UseBonemealMixin extends Behavior<Villager> {
     private boolean validPos(boolean original, @Local(argsOnly = true) ServerLevel level, @Local(argsOnly = true) BlockPos pos) {
         if (original) {
             BlockState state = level.getBlockState(pos);
-            if (state.is(SmarterFarmers.HARVESTABLE_ON_DIRT_NO_REPLANT)) {
+            if (state.is(SmarterFarmers.HARVEST_ON_TILLABLE_NO_REPLANT)) {
                 return false;
             }
 

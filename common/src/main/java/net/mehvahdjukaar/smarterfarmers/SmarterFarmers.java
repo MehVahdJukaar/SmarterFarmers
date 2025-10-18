@@ -9,7 +9,6 @@ import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ModConfigHolder;
 import net.mehvahdjukaar.smarterfarmers.mixins.VillagerAccessor;
-import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ItemParticleOption;
@@ -50,13 +49,22 @@ public class SmarterFarmers {
 
     public static final boolean QUARK = PlatHelper.isModLoaded("quark");
 
-    public static final TagKey<Block> SPECIAL_HARVESTABLE = TagKey.create(Registries.BLOCK, res("harvestable_plant"));
-    public static final TagKey<Block> HARVESTABLE_ON_DIRT_NO_REPLANT = TagKey.create(Registries.BLOCK, res("harvestable_on_dirt_no_replant"));
-    public static final TagKey<Block> HARVESTABLE_ON_DIRT = TagKey.create(Registries.BLOCK, res("harvestable_on_dirt"));
-    public static final TagKey<Block> VALID_FARMLAND = TagKey.create(Registries.BLOCK, res("farmer_plantable_on"));
+    //harvest & replant
+    public static final TagKey<Block> HARVEST_ON_FARMLAND_SPECIAL = TagKey.create(Registries.BLOCK, res("harvest_on_farmland"));
+    //harvest
+    public static final TagKey<Block> HARVEST_ON_TILLABLE_NO_REPLANT = TagKey.create(Registries.BLOCK, res("harvestable_on_tillable_no_replant"));
+    //harvest & till & replant
+    public static final TagKey<Block> HARVEST_ON_TILLABLE = TagKey.create(Registries.BLOCK, res("harvest_on_tillable"));
+
+    //what will be tilled IF farmer is in a action with tilling
+    public static final TagKey<Block> FARMER_TILLABLE = TagKey.create(Registries.BLOCK, res("tillable_to_farmland"));
+
+    //tilled blocks that farmers are happy to plant on
+    public static final TagKey<Block> VALID_FARMLAND = TagKey.create(Registries.BLOCK, res("farmland"));
+
+
     public static final TagKey<Item> EAT_BLACKLIST = TagKey.create(Registries.ITEM, res("villagers_cant_eat"));
     public static final TagKey<Item> STEM_SEEDS = TagKey.create(Registries.ITEM, res("stem_seeds"));
-    public static final TagKey<Block> FARMER_TILLABLE = TagKey.create(Registries.BLOCK, res("farmer_tillable"));
 
     public static final Supplier<Boolean> PICKUP_FOOD;
     public static final Supplier<Boolean> EAT_FOOD;

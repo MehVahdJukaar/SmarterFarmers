@@ -210,10 +210,10 @@ public class SFHarvestFarmland extends HarvestFarmland {
                 return Action.plantIfNoMelonsAround(pos, level);
             }
         }
-        if (cropState.is(SmarterFarmers.HARVESTABLE_ON_DIRT_NO_REPLANT) &&
+        if (cropState.is(SmarterFarmers.HARVEST_ON_TILLABLE_NO_REPLANT) &&
                 farmState.is(SmarterFarmers.FARMER_TILLABLE)) {
             return Action.HARVEST;
-        } else if (cropState.is(SmarterFarmers.HARVESTABLE_ON_DIRT) &&
+        } else if (cropState.is(SmarterFarmers.HARVEST_ON_TILLABLE) &&
                 farmState.is(SmarterFarmers.FARMER_TILLABLE)) {
             return Action.HARVEST_AND_REPLANT;
         } else if (cropState.isAir() && SmarterFarmers.PLANT_ON_DIRT.get() &&
@@ -248,15 +248,15 @@ public class SFHarvestFarmland extends HarvestFarmland {
         // harvest
         if (!targetState.isAir()) {
             //break special crop
-            if (targetState.is(SmarterFarmers.SPECIAL_HARVESTABLE) ||
-                    targetState.is(SmarterFarmers.HARVESTABLE_ON_DIRT) ||
-                    targetState.is(SmarterFarmers.HARVESTABLE_ON_DIRT_NO_REPLANT)) {
+            if (targetState.is(SmarterFarmers.HARVEST_ON_FARMLAND_SPECIAL) ||
+                    targetState.is(SmarterFarmers.HARVEST_ON_TILLABLE) ||
+                    targetState.is(SmarterFarmers.HARVEST_ON_TILLABLE_NO_REPLANT)) {
                 level.destroyBlock(this.aboveFarmlandPos, true, villager);
                 BlockState below = level.getBlockState(belowPos);
                 if (SFPlatformStuff.tillBlock(below, belowPos, level)) {
                     level.playSound(null, belowPos, SoundEvents.HOE_TILL, SoundSource.BLOCKS, 1.0F, 1.0F);
                 }
-                if (targetState.is(SmarterFarmers.HARVESTABLE_ON_DIRT_NO_REPLANT)) {
+                if (targetState.is(SmarterFarmers.HARVEST_ON_TILLABLE_NO_REPLANT)) {
                     this.aboveFarmlandPos = null;
                     //dont replant pumpkins. exit early
                     return;
