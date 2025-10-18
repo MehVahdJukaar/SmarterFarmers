@@ -1,1 +1,2 @@
-added better exception handling
+- changed tag names to be more descriptive
+- added harvest_blacklist tag

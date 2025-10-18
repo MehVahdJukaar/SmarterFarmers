@@ -201,12 +201,16 @@ public class SFHarvestFarmland extends HarvestFarmland {
     protected Action getActionForPos(BlockPos pos, ServerLevel level) {
         BlockState cropState = level.getBlockState(pos);
         BlockState farmState = level.getBlockState(pos.below());
+        if (cropState.is(SmarterFarmers.HARVEST_BLACKLIST)) return null;
         //if farmland below
         if (FarmTaskLogic.isFarmland(farmState)) {
+            //has a mature crop here?
             if (FarmTaskLogic.isCropMature(cropState, pos, level)) {
                 return Action.HARVEST_AND_REPLANT;
             }
+            //has air here
             if (cropState.isAir()) {
+                //plant only
                 return Action.plantIfNoMelonsAround(pos, level);
             }
         }
@@ -216,7 +220,9 @@ public class SFHarvestFarmland extends HarvestFarmland {
                 return Action.HARVEST;
             } else if (cropState.is(SmarterFarmers.HARVEST_ON_TILLABLE)) {
                 return Action.HARVEST_AND_REPLANT;
-            } else if (cropState.isAir() && SmarterFarmers.PLANT_ON_DIRT.get()) {
+            } else if (cropState.isAir() && SmarterFarmers.PLANT_ON_TILLABLE.get()) {
+                //if has air here & config is on
+                //plant onlyS
                 return Action.plantIfNoMelonsAround(pos, level);
             }
         }

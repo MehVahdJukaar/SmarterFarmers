@@ -22,6 +22,7 @@ import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.HoeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
@@ -57,10 +58,11 @@ public class SmarterFarmers {
     public static final TagKey<Block> HARVEST_ON_TILLABLE = TagKey.create(Registries.BLOCK, res("harvest_on_tillable"));
 
     //what will be tilled IF farmer is in a action with tilling
-    public static final TagKey<Block> FARMER_TILLABLE = TagKey.create(Registries.BLOCK, res("tillable_to_farmland"));
+    public static final TagKey<Block> FARMER_TILLABLE = TagKey.create(Registries.BLOCK, res("tillable"));
 
     //tilled blocks that farmers are happy to plant on
     public static final TagKey<Block> VALID_FARMLAND = TagKey.create(Registries.BLOCK, res("farmland"));
+    public static final TagKey<Block> HARVEST_BLACKLIST = TagKey.create(Registries.BLOCK, res("harvest_blacklist"));
 
 
     public static final TagKey<Item> EAT_BLACKLIST = TagKey.create(Registries.ITEM, res("villagers_cant_eat"));
@@ -69,7 +71,7 @@ public class SmarterFarmers {
     public static final Supplier<Boolean> PICKUP_FOOD;
     public static final Supplier<Boolean> EAT_FOOD;
     public static final Supplier<Boolean> DEBUG_RENDERERS;
-    public static final Supplier<Boolean> PLANT_ON_DIRT;
+    public static final Supplier<Boolean> PLANT_ON_TILLABLE;
     public static final Supplier<Integer> TIME_TO_HARVEST;
 
     public static final ModConfigHolder CONFIG;
@@ -88,8 +90,8 @@ public class SmarterFarmers {
         DEBUG_RENDERERS = PlatHelper.isDev() ? () -> true :
                 builder.comment("If true, will render debug info for farmers. Only works in single player")
                         .define("debug_renderer", false);
-        PLANT_ON_DIRT = builder.comment("If true, farmers will plant crops on dirt blocks by tilling them. Valid blocks are controlled by farmer_tillable tag")
-                .define("plant_on_dirt", false);
+        PLANT_ON_TILLABLE = builder.comment("If true, farmers will plant crops on tillable blocks (like dirt) by first tilling them. Valid blocks are controlled by farmer_tillable tag")
+                .define("plant_on_tillable", false);
         builder.pop();
 
         CONFIG = builder.build();
