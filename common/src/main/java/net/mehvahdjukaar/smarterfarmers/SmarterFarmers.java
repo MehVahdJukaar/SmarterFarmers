@@ -79,7 +79,7 @@ public class SmarterFarmers {
     //TODO: make them harvest pumpkins and melons
     static {
         ConfigBuilder builder = ConfigBuilder.create(MOD_ID, ConfigType.COMMON);
-
+POITypes.
         builder.push("general");
         PICKUP_FOOD = builder.comment("If true, villagers will pick up food items from the regardless of mob griefing gamerule. Needed since with mob griefing on they wont be able to breed.")
                 .define("pickup_food_override", true);
